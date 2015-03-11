@@ -5,14 +5,13 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
-	api "./api"
-
 	"encoding/json"
 
+	"github.com/rs/cors"
 	"github.com/jmcvetta/neoism"
-
 	"github.com/gorilla/mux"
+
+	api "./api"
 )
 
 func main() {
@@ -36,7 +35,27 @@ func main() {
 	skill_vocals := skills.Create("vocals")
 	skill_bass   := skills.Create("bass")
 	skill_piano  := skills.Create("piano")
+	skill_guitar := skills.Create("guitar")
 	skill_drums  := skills.Create("drums")
+
+	artists.Create("Wes Montgomery").AddSkill(skill_guitar)
+	artists.Create("Alton Elis").AddSkill(skill_vocals)
+	artists.Create("Toots and The Maytals")
+	artists.Create("Nina Simone").AddSkill(skill_vocals)
+	artists.Create("Nirvana")
+	artists.Create("Nat King Cole")
+	artists.Create("Bon Iver").AddSkill(skill_vocals).AddSkill(skill_guitar)
+	artists.Create("Beirut")
+	artists.Create("The Roots")
+	artists.Create("Fats Waller").AddSkill(skill_vocals).AddSkill(skill_piano)
+	artists.Create("Louis Jordan").AddSkill(skill_vocals)
+	artists.Create("Coleman Hawkins")
+	the_smiths := artists.Create("The Smiths")
+	artists.Create("Morissey").AddMembership(the_smiths).AddSkill(skill_vocals)
+	artists.Create("Serge Gainsbourg").AddSkill(skill_vocals).AddSkill(skill_piano)
+	artists.Create("Joy Division")
+	artists.Create("Arcade Fire")
+	artists.Create("John Fahey")
 
 	blue_note    := labels.Create("Blue Note")
 
@@ -73,6 +92,8 @@ func main() {
 		if err != nil {
 			fmt.Println("error:", err)
 		}
+
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(b))
 	})
 
@@ -93,6 +114,7 @@ func main() {
 			fmt.Println("error:", err)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(b))
 	})
 
@@ -106,6 +128,7 @@ func main() {
 		fmt.Fprintln(w, string(b))
 	})
 
+	handler := cors.Default().Handler(router)
 
-	log.Fatal(http.ListenAndServe(":2000", router))
+	log.Fatal(http.ListenAndServe(":2000", handler))
 }

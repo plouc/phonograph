@@ -1,3 +1,4 @@
 .idea
-node_modules
+app/node_modules
 neo4j*
+app/dist/vinyl.*

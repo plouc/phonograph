@@ -51,6 +51,12 @@ func (a *Artist) PlayedIn(release *Release) *Artist {
 	return a
 }
 
+func (a *Artist) AddMembership(artist *Artist) *Artist {
+	a.node.Relate("MEMBER_OF", artist.Id, nil)
+
+	return a
+}
+
 
 
 
@@ -75,7 +81,7 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 		Statement: `
 			MATCH (a:Artist)
 			WHERE id(a) = {nodeId}
-			MATCH (a)-[HAS_SKILL]->(s:Skill)
+			OPTIONAL MATCH (a)-[HAS_SKILL]->(s:Skill)
 			RETURN a, id(s) AS skillId, s
 			ORDER BY s.name
 		`,
@@ -96,10 +102,12 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	artist.Id = id
 
 	for _, res := range results {
-		skill := SkillFromNode(&res.S)
-		skill.Id = res.SkillId
-		skill.halify()
-		artist.hasSkill(skill)
+		if res.SkillId != 0 {
+			skill := SkillFromNode(&res.S)
+			skill.Id = res.SkillId
+			skill.halify()
+			artist.hasSkill(skill)
+		}
 	}
 
 	artist.halify()
@@ -129,15 +137,16 @@ func (am *ArtistsManager) Find() Artists {
 	results := []struct {
 		A        neoism.Node
 		ArtistId int
-		S        neoism.Node
+		S        neoism.Node `json:"s,omitempty"`
 		SkillId  int
 	}{}
 
 	cq := neoism.CypherQuery{
 		Statement: `
-			MATCH (a:Artist)-[HAS_SKILL]->(s:Skill)
+			MATCH (a:Artist)
+			OPTIONAL MATCH (a)-[HAS_SKILL]->(s:Skill)
 			RETURN a, id(a) AS artistId, s, id(s) AS skillId
-			ORDER BY a.name
+			ORDER BY a.name, s.name
 		`,
 		Result: &results,
 	}
@@ -157,10 +166,12 @@ func (am *ArtistsManager) Find() Artists {
 			artists = append(artists, artistsById[res.ArtistId])
 		}
 
-		skill := SkillFromNode(&res.S)
-		skill.Id = res.SkillId
-		skill.halify()
-		artistsById[res.ArtistId].hasSkill(skill)
+		if res.SkillId != 0 {
+			skill := SkillFromNode(&res.S)
+			skill.Id = res.SkillId
+			skill.halify()
+			artistsById[res.ArtistId].hasSkill(skill)
+		}
 	}
 
 	return artists
