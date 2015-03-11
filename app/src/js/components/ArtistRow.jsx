@@ -3,7 +3,7 @@ var Link         = require('react-router').Link;
 var ArtistSkills = require('./ArtistSkills.jsx');
 
 var ArtisRow = React.createClass({
-    render: function () {
+    render() {
         return (
             <tr>
                 <td>

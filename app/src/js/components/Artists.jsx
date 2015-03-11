@@ -9,30 +9,30 @@ var Artists = React.createClass({
         Reflux.ListenerMixin
     ],
 
-    getInitialState: function () {
+    getInitialState() {
         return {
             artists: []
         }
     },
 
-    componentWillMount: function () {
+    componentWillMount() {
         this.listenTo(ArtistsStore, this._onArtistsUpdate);
 
         ArtistsActions.list();
     },
 
-    _onArtistsUpdate: function (artists) {
+    _onArtistsUpdate(artists) {
         this.setState({ artists: artists });
     },
 
-    render: function () {
-        var artistNodes = this.state.artists.map(function (artist) {
+    render() {
+        var artistNodes = this.state.artists.map(artist => {
             return <ArtistRow artist={artist} key={artist.id} />
         });
 
         return (
             <div>
-                <h2>Artists</h2>
+                <h2 className="page-title">Artists</h2>
                 <table>
                     <tbody>
                         {artistNodes}

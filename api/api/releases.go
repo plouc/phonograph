@@ -8,11 +8,9 @@ import (
 
 type Release struct {
 	node *neoism.Node
-	Name string `json:"name"`
-}
 
-func (r *Release) Id() int {
-	return r.node.Id()
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func (r *Release) ProducedBy(label *Label) *Release {
@@ -43,6 +41,7 @@ func (rm *ReleasesManager) Create(releaseName string) *Release {
 
 	release := &Release{
 		node: node,
+		Id:   node.Id(),
 		Name: releaseName,
 	}
 

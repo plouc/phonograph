@@ -5,20 +5,28 @@ var DefaultRoute = Router.DefaultRoute;
 var RouteHandler = Router.RouteHandler;
 var Link         = Router.Link;
 
-var Artists = require('./components/Artists.jsx');
-var Artist  = require('./components/Artist.jsx');
+var Artists     = require('./components/Artists.jsx');
+var Artist      = require('./components/Artist.jsx');
+var Masters     = require('./components/Masters.jsx');
+var Master      = require('./components/Master.jsx');
+var Styles      = require('./components/Styles.jsx');
+var MenuToggle  = require('./components/MenuToggle.jsx');
+var Menu        = require('./components/Menu.jsx');
+var MenuActions = require('./actions/MenuActions');
 
 var App = React.createClass({
-    getInitialState: function () {
-        return {  };
-    },
-
     render: function () {
         return (
             <div>
-                <h1><Link to="index">Vinyl API</Link></h1>
+                <div className="header">
+                    <Link className="header__brand" to="index"><i className="fa fa-dot-circle-o"/> phonograph</Link>
+                    <MenuToggle/>
+                </div>
+                <Menu />
                 <div>
-                    <RouteHandler/>
+                    <div className="container">
+                        <RouteHandler/>
+                    </div>
                 </div>
             </div>
         );
@@ -29,9 +37,14 @@ var routes = (
     <Route handler={App}>
         <DefaultRoute name="index" handler={Artists}/>
         <Route name="artist" path="artists/:artist_id" handler={Artist}/>
+        <Route name="masters" path="masters" handler={Masters}/>
+        <Route name="master" path="masters/:master_id" handler={Master}/>
+        <Route name="styles" path="styles" handler={Styles}/>
     </Route>
 );
 
 Router.run(routes, function (Handler) {
+    MenuActions.close();
+
     React.render(<Handler/>, document.getElementById('app'));
 });

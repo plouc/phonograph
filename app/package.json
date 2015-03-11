@@ -19,6 +19,7 @@
   "dependencies": {
     "browserify": "^9.0.3",
     "chalk": "^1.0.0",
+    "font-awesome-stylus": "git+https://git@github.com/raulghm/Font-Awesome-Stylus.git",
     "gulp": "^3.8.11",
     "gulp-rename": "^1.2.0",
     "gulp-stylus": "^2.0.1",

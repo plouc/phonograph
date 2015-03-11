@@ -9,9 +9,10 @@ import (
 type Artist struct {
 	node     *neoism.Node
 
-	Id       int      `json:"id"`
-	Name     string   `json:"name"`
-	Skills   []*Skill `json:"skills"`
+	Id       int         `json:"id"`
+	Name     string      `json:"name"`
+	Skills   []*Skill    `json:"skills"`
+	Groups   []*Artist   `json:"groups"`
 
 	Links    Links       `json:"_links"`
 	Embedded interface{} `json:"_embedded"`
@@ -26,6 +27,7 @@ func ArtistFromNode(node *neoism.Node) *Artist {
 		node:   node,
 		Name:   name,
 		Skills: []*Skill{},
+		Groups: []*Artist{},
 	}
 }
 
@@ -41,12 +43,8 @@ func (a *Artist) AddSkill(skill *Skill) *Artist {
 	return a
 }
 
-func (a *Artist) halify() {
-	a.Links.Self = fmt.Sprintf("http://localhost:2000/artists/%d", a.Id)
-}
-
-func (a *Artist) PlayedIn(release *Release) *Artist {
-	a.node.Relate("PLAYED_IN", release.Id(), nil)
+func (a *Artist) PlayedIn(master *Master) *Artist {
+	a.node.Relate("PLAYED_IN", master.Id, nil)
 
 	return a
 }
@@ -57,6 +55,21 @@ func (a *Artist) AddMembership(artist *Artist) *Artist {
 	return a
 }
 
+func (a *Artist) memberOf(group *Artist) *Artist {
+	a.Groups = append(a.Groups, group)
+
+	return a
+}
+
+func (a *Artist) AddStyle(style *Style) *Artist {
+	a.node.Relate("CLASSIFIED_IN", style.Id, nil)
+
+	return a
+}
+
+func (a *Artist) halify() {
+	a.Links.Self = fmt.Sprintf("http://localhost:2000/artists/%d", a.Id)
+}
 
 
 
@@ -73,17 +86,18 @@ func NewArtistsManager (db *neoism.Database) *ArtistsManager {
 func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	results := []struct {
 		A       neoism.Node
-		SkillId int
-		S       neoism.Node
+		RelType string
+		NodeId  int
+		N       neoism.Node
 	}{}
 
 	cq := neoism.CypherQuery{
 		Statement: `
 			MATCH (a:Artist)
 			WHERE id(a) = {nodeId}
-			OPTIONAL MATCH (a)-[HAS_SKILL]->(s:Skill)
-			RETURN a, id(s) AS skillId, s
-			ORDER BY s.name
+			OPTIONAL MATCH (a)-[r:HAS_SKILL|MEMBER_OF]->(n)
+			RETURN a, type(r) AS relType, id(n) AS nodeId, n
+			ORDER BY type(r), n.name
 		`,
 		Parameters: neoism.Props{"nodeId": id},
 		Result:     &results,
@@ -102,11 +116,21 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	artist.Id = id
 
 	for _, res := range results {
-		if res.SkillId != 0 {
-			skill := SkillFromNode(&res.S)
-			skill.Id = res.SkillId
-			skill.halify()
-			artist.hasSkill(skill)
+		if res.NodeId != 0 {
+			fmt.Printf("%s\n", res.RelType)
+			if res.RelType == "HAS_SKILL" {
+				skill := SkillFromNode(&res.N)
+				skill.Id = res.NodeId
+				skill.halify()
+				artist.hasSkill(skill)
+			}
+
+			if res.RelType == "MEMBER_OF" {
+				group := ArtistFromNode(&res.N)
+				group.Id = res.NodeId
+				group.halify()
+				artist.memberOf(group)
+			}
 		}
 	}
 
@@ -137,7 +161,7 @@ func (am *ArtistsManager) Find() Artists {
 	results := []struct {
 		A        neoism.Node
 		ArtistId int
-		S        neoism.Node `json:"s,omitempty"`
+		S        neoism.Node
 		SkillId  int
 	}{}
 
@@ -163,6 +187,7 @@ func (am *ArtistsManager) Find() Artists {
 			artistsById[res.ArtistId] = ArtistFromNode(&res.A)
 			artistsById[res.ArtistId].Id = res.ArtistId
 			artistsById[res.ArtistId].halify()
+
 			artists = append(artists, artistsById[res.ArtistId])
 		}
 
@@ -174,5 +199,39 @@ func (am *ArtistsManager) Find() Artists {
 		}
 	}
 
+	return artists
+}
+
+
+func (am *ArtistsManager) Similars(a *Artist) Artists {
+	results := []struct {
+		B        neoism.Node
+		ArtistId int
+	}{}
+
+	cq := neoism.CypherQuery{
+		Statement: `
+			MATCH (a:Artist)
+			WHERE id(a) = {artistId}
+			MATCH (a)-[c0:CLASSIFIED_IN]->(s:Style)<-[c1:CLASSIFIED_IN]-(b:Artist)
+			RETURN b, id(b) AS artistId
+			ORDER BY b.name
+		`,
+		Parameters: neoism.Props{"artistId": a.Id},
+		Result: &results,
+	}
+
+	am.db.Cypher(&cq)
+
+	artists := Artists{}
+
+	for _, res := range results {
+		artist := ArtistFromNode(&res.B)
+		artist.Id = res.ArtistId
+		artist.halify()
+
+		artists = append(artists, artist)
+	}
+	
 	return artists
 }

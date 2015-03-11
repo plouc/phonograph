@@ -1,6 +1,6 @@
 var Reflux         = require('reflux');
 var ArtistsActions = require('./../actions/ArtistsActions');
-var request        = require("superagent");
+var request        = require('superagent');
 
 var _artist;
 var _artists = [];
@@ -19,6 +19,8 @@ var ArtistsStore = Reflux.createStore({
     get: function (id) {
         request.get('http://localhost:2000/artists/' + id).end(function (err, res) {
             _artist = res.body;
+
+            console.log(_artist);
 
             this.trigger(_artist);
         }.bind(this));
