@@ -172,6 +172,12 @@ master:
     name:     Night in Tunisia
     artists:  [art]
     styles:   [jazz]
+    tracks:
+      - { name: A Night In Tunisia }
+      - { name: Sincerely Diana }
+      - { name: So Tired }
+      - { name: Yama }
+      - { name: Kozo's Waltz }
     releases:
       - { year: 1960, label: blue_note, country: US }
       - { year: 1973, label: liberty,   country: US }
@@ -181,6 +187,21 @@ master:
     name:     The very best of Astrud Gilberto
     artists:  [astrud]
     styles:   [jazz]
+    tracks:
+      - { name: The Girl From Ipanema }
+      - { name: The Shadow Of Your Smile }
+      - { name: Aruanda }
+      - { name: Fly Me To The Moon }
+      - { name: Goodbye Sadness }
+      - { name: Bim Bom }
+      - { name: I'll Wait For You }
+      - { name: Aqua De Bebor }
+      - { name: Insensatez }
+      - { name: Manha De Carnaval }
+      - { name: Dreamer }
+      - { name: Cirtain Sadness }
+      - { name: Look To The Rainbow }
+      - { name: Meditation }
     releases: []
   money_jungle:
     name:     Money Jungle
@@ -200,6 +221,15 @@ master:
     name:     Chances are
     artists:  [marley]
     styles:   [reggae]
+    tracks:
+      - { name: Reggae On Brodway }
+      - { name: Gonna Get You }
+      - { name: Chances Are }
+      - { name: Soul Rebel }
+      - { name: Dance Do The Reggae }
+      - { name: Mellow Mood }
+      - { name: Stay With Me }
+      - { name: (I'm) Hurting Inside }
     releases:
       - { year: 1981, label: cotillion, country: US }
       - { year: 1981, label: wea,       country: Australia }

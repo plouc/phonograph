@@ -18,7 +18,6 @@ func (l *Label) Id() int {
 }
 
 func (l *Label) Halify() {
-	fmt.Printf("%#v", l)
 	l.Links.Self = fmt.Sprintf("http://localhost:2000/labels/%d", 3)
 	l.Embedded = map[string]string{
 		"productions": "test",

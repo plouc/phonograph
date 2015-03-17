@@ -25,6 +25,10 @@ type Fixtures struct {
 		Name    string
 		Artists  []string
 		Styles   []string
+		Tracks   []struct{
+			Name     string
+			Duration int
+		}
 		Releases []struct{
 			Year    int
 			Label   string
@@ -72,6 +76,7 @@ func main() {
 	labels   := api.NewLabelsManager(db)
 	artists  := api.NewArtistsManager(db)
 	masters  := api.NewMastersManager(db)
+	tracks   := api.NewTracksManager(db)
 	releases := api.NewReleasesManager(db)
 	skills   := api.NewSkillsManager(db)
 	styles   := api.NewStylesManager(db)
@@ -116,7 +121,13 @@ func main() {
 	fmt.Println("\nMasters:")
 	for k, m := range f.Master {
 		fmt.Printf("> creating master '%s'\n", m.Name)
-		refs.masters[k] = masters.Create(m.Name)
+		master := masters.Create(m.Name)
+		for _, t := range m.Tracks {
+			fmt.Printf("> adding track '%s' to '%s'\n", t.Name, m.Name)
+			track := tracks.Create(t.Name, t.Duration)
+			master.AddTrack(track)
+		}
+		refs.masters[k] = master
 	}
 
 

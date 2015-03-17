@@ -47,6 +47,12 @@ func MasterFromNode(node *neoism.Node) *Master {
 	}
 }
 
+func (m *Master) AddTrack(track *Track) *Master {
+	m.node.Relate("HAS_TRACK", track.Id, nil)
+
+	return m
+}
+
 func (m *Master) AddRelease(release *Release) *Master {
 	m.node.Relate("HAS_RELEASE", release.Id, nil)
 

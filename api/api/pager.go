@@ -1,7 +1,7 @@
 package api
 
 import (
-	"fmt"
+	//"fmt"
 	"strconv"
 	"net/url"
 	"math"
@@ -43,7 +43,6 @@ func NewPager(values url.Values) *Pager {
 func (p *Pager) SetTotal(total int) {
 	p.Total = total
 	p.PageCount = int(math.Ceil(float64(total) / float64(p.PerPage)))
-	fmt.Printf("%d", p.PageCount)
 }
 
 func (p *Pager) Offset() int {
