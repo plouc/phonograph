@@ -222,14 +222,14 @@ master:
     artists:  [marley]
     styles:   [reggae]
     tracks:
-      - { name: Reggae On Brodway }
-      - { name: Gonna Get You }
-      - { name: Chances Are }
-      - { name: Soul Rebel }
-      - { name: Dance Do The Reggae }
-      - { name: Mellow Mood }
-      - { name: Stay With Me }
-      - { name: (I'm) Hurting Inside }
+      - { name: Reggae On Brodway,    duration: 320 }
+      - { name: Gonna Get You,        duration: 196 }
+      - { name: Chances Are,          duration: 303 }
+      - { name: Soul Rebel,           duration: 238 }
+      - { name: Dance Do The Reggae,  duration: 278 }
+      - { name: Mellow Mood,          duration: 202 }
+      - { name: Stay With Me,         duration: 180 }
+      - { name: (I'm) Hurting Inside, duration: 220 }
     releases:
       - { year: 1981, label: cotillion, country: US }
       - { year: 1981, label: wea,       country: Australia }

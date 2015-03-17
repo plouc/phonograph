@@ -37,7 +37,7 @@ type TracksManager struct {
 
 func TrackFromNode(node *neoism.Node) *Track {
 	name     := node.Data["name"].(string)
-	duration := node.Data["duration"].(int)
+	duration := int(node.Data["duration"].(float64))
 
 	return &Track{
 		node:     node,

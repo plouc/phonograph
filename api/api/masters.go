@@ -13,6 +13,7 @@ type Master struct {
 	Name     string      `json:"name"`
 	Releases []*Release  `json:"releases"`
 	Artists  []*Artist   `json:"artists"`
+	Tracks   []*Track    `json:"tracks"`
 
 	Links    Links       `json:"_links"`
 	Embedded interface{} `json:"_embedded"`
@@ -44,6 +45,7 @@ func MasterFromNode(node *neoism.Node) *Master {
 		Name:     name,
 		Releases: []*Release{},
 		Artists:  []*Artist{},
+		Tracks:   []*Track{},
 	}
 }
 
@@ -144,7 +146,7 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 		Statement: `
 			MATCH (m:Master)
 			WHERE id(m) = {nodeId}
-			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN]-(n)
+			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN|HAS_TRACK]-(n)
 			RETURN m, type(r) AS relType, id(n) AS nodeId, n
 			ORDER BY type(r), n.name
 		`,
@@ -177,6 +179,12 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 				art.Id = res.NodeId
 				art.halify()
 				master.Artists = append(master.Artists, art)
+			}
+			if res.RelType == "HAS_TRACK" {
+				tra := TrackFromNode(&res.N)
+				tra.Id = res.NodeId
+				tra.halify()
+				master.Tracks = append(master.Tracks, tra)
 			}
 		}
 	}

@@ -5,6 +5,7 @@ var Link           = Router.Link;
 var MastersActions = require('./../actions/MastersActions');
 var MastersStore   = require('./../stores/MastersStore');
 var ReleaseNodes   = require('./MasterReleases.jsx');
+var MasterTracks   = require('./MasterTracks.jsx');
 
 var Master = React.createClass({
     mixins: [
@@ -31,9 +32,9 @@ var Master = React.createClass({
     },
 
     render() {
-        var trackNodes  = null;
         var releaseNode = null;
         var artistNode  = null;
+        var tracksNode  = null;
 
         if (this.state.master !== null) {
             releaseNode = <ReleaseNodes releases={this.state.master.releases}/>
@@ -51,9 +52,8 @@ var Master = React.createClass({
             });
 
             artistNode = <div className="master__artists">by {artistNodes}</div>;
+            tracksNode = <MasterTracks tracks={this.state.master.tracks}/>
         }
-
-
 
         return (
             <div>
@@ -64,7 +64,7 @@ var Master = React.createClass({
                 </div>
                 <h2 className="page-title">{this.state.master ? this.state.master.name : ''}</h2>
                 {artistNode}
-                {trackNodes}
+                {tracksNode}
                 {releaseNode}
             </div>
         );

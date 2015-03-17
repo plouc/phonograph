@@ -14,7 +14,7 @@ var MasterReleases = React.createClass({
             });
 
             listNode = (
-                <table>
+                <table className="master__releases__table">
                     <tbody>
                         {releaseNodes}
                     </tbody>
