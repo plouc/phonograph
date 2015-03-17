@@ -1,0 +1,257 @@
+skill:
+  vocals:     vocals
+  bass:       bass
+  piano:      piano
+  guitar:     guitar
+  drums:      drums
+  organ:      organ
+  percussion: percussion
+
+style:
+  jazz:       jazz
+  grunge:     grunge
+  country:    country
+  rock:       rock
+  hiphop:     hip hop
+  alt_rock:   alternative rock
+  indie_rock: indie rock
+  reggae:     reggae
+  ska:        ska
+  folk:       folk
+  classic:    classic
+  rocksteady: rocksteady
+  gypsy_jazz: gypsy jazz
+
+label:
+  verve:     The Verve
+  elektra:   Elektra
+  blue_note: Blue Note
+  polydor:   Polydor
+  mercury:   Mercury
+  mgm:       MGM
+  atlantic:  Atlantic
+  treasure:  Treasure Isle
+  studio1:   Studio One
+  trojan:    Trojan
+  liberty:   Liberty
+  cotillion: Cotillion
+  wea:       WEA
+
+artist:
+  kurt:
+    name:   Kurt Cobain
+    groups: [nirvana]
+    skills: [guitar, vocals]
+    styles: [grunge, alt_rock]
+  wes:
+    name:   Wes Montgomery
+    skills: [guitar]
+    styles: [jazz]
+  alton:
+    name: Alton Elis
+    skills: [vocals]
+    styles: [reggae]
+  toots:
+    name:   Toots and The Maytals
+    styles: [reggae, ska]
+  nina:
+    name:   Nina Simone
+    skills: [vocals]
+    styles: [jazz]
+  nat:
+    name:   Nat King Cole
+    skills: [piano, vocals]
+    styles: [jazz]
+  bon:
+    name:   Bon Iver
+    skills: [guitar, vocals]
+    styles: [folk]
+  beirut:
+    name: Beirut
+  roots:
+    name:   The Roots
+    styles: [hiphop]
+  fats:
+    name:   Fats Waller
+    skills: [piano, vocals]
+    styles: [jazz]
+  louis:
+    name:   Louis Jordan
+    skills: [piano, vocals]
+    styles: [jazz]
+  coleman:
+    name: Coleman Hawkins
+  hendrix:
+    name: Jimmy Hendrix
+  doors:
+    name: The doors
+  love:
+    name: Love
+  gainsbourg:
+    name: Serge Gainsbourg
+  brel:
+    name: Jacques Brel
+  velvet:
+    name:   Velvet Underground
+    styles: [rock]
+  smiths:
+    name:   The Smiths
+    styles: [indie_rock, alt_rock]
+  morissey:
+    name:   Morissey
+    groups: [smiths]
+    skills: [vocals]
+    styles: [indie_rock, alt_rock]
+  joy_div:
+    name: Joy Division
+  joao:
+    name:   Joao Gilberto
+    skills: [guitar, vocals]
+    styles: [jazz]
+  astrud:
+    name:   Astrud Gilberto
+    skills: [vocals]
+    styles: [jazz]
+  nirvana:
+    name:   Nirvana
+    skills: [piano]
+  gould:
+    name:   Glenn Gould
+    skills: [piano]
+    styles: [classic]
+  neil_young:
+    name:   Neil Young
+    skills: [guitar, vocals]
+    styles: [rock, folk]
+  marley:
+    name:   Bob Marley
+    skills: [vocals, guitar]
+    styles: [reggae, rocksteady, ska]
+  art:
+    name:   Art Blakey
+    groups: [art_mess]
+    skills: [drums]
+    styles: [jazz]
+  art_mess:
+    name:   Art Blakey and The Jazz Messengers
+    styles: [jazz]
+  roach:
+    name:   Max Roach
+    skills: [drums]
+    styles: [jazz]
+  mingus:
+    name:   Charlie Mingus
+    styles: [jazz]
+  duke:
+    name:   Duke Ellington
+    skills: [piano]
+    styles: [jazz]
+  eroll:
+    name:   Erroll Garner
+    skills: [piano]
+    styles: [jazz]
+  ra:
+    name:   Sun Ra
+    skills: [piano, organ, percussion]
+    styles: [jazz]
+  byrd:
+    name:   Charlie Byrd
+    skills: [guitar]
+    styles: [jazz]
+  django:
+    name:   Django Reinhardt
+    skills: [guitar]
+    styles: [jazz, gypsy_jazz]
+  lou_reed:
+    name:   Lou Reed
+    skills: [guitar, vocals]
+    styles: [rock]
+
+master:
+  night_in:
+    name:     Night in Tunisia
+    artists:  [art]
+    styles:   [jazz]
+    releases:
+      - { year: 1960, label: blue_note, country: US }
+      - { year: 1973, label: liberty,   country: US }
+      - { year: 2013, label: blue_note, country: US }
+      - { year: 1992, label: blue_note, country: Japan }
+  best_of_astrud:
+    name:     The very best of Astrud Gilberto
+    artists:  [astrud]
+    styles:   [jazz]
+    releases: []
+  money_jungle:
+    name:     Money Jungle
+    artists:  [duke, roach, mingus]
+    styles:   [jazz]
+    releases: []
+  bleach:
+    name:     Bleach
+    artists:  [nirvana]
+    styles:   [alt_rock, grunge]
+  meat:
+    name:     Meat is murder
+    artists:  [smiths]
+    styles:   [rock]
+    releases: []
+  chances:
+    name:     Chances are
+    artists:  [marley]
+    styles:   [reggae]
+    releases:
+      - { year: 1981, label: cotillion, country: US }
+      - { year: 1981, label: wea,       country: Australia }
+      - { year: 1981, label: wea,       country: Europe }
+      - { year: 1981, label: wea,       country: Spain }
+      - { year: 1981, label: wea,       country: France }
+      - { year: 1981, label: wea,       country: Japan }
+      - { year: 1981, label: wea,       country: Canada }
+      - { year: 1981, label: wea,       country: Jamaica }
+#(LP, Comp)	WEA International	WEA 99183	Philippines	1981
+#(LP, Comp)	WEA	WEA 99 183	Scandinavia	1981
+#(LP, Comp)	WEA, WEA	WEA 99 183, WEA K 99 183	Netherlands	1981
+#(LP, Comp)	WEA	99183	Greece	1981
+#(LP, Comp)	Wea International, SUZY	WEA 99183	Yugoslavia	1981
+#(LP, Comp)	WEA	670.9331	Brazil	1981
+#(LP, Comp)	WEA	U 99183	Italy	1981
+#(LP, Comp)	WEA	WEA 99183	Portugal	1981
+#(LP, Comp)	WEA	K 99183	UK	1981
+#(LP, TP, Comp)	WEA	99183	Greece	1981
+#(LP, Comp)	WEA, Suzy	99183	Yugoslavia	1983
+#(LP, Album, RE)	WEA, WEA	LB 99138, 99138	Spain	1984
+#(Cass, Comp)	WEA, Cotillion	CS 5228 SR	US	1987
+#(CD, Comp)	WEA	18P2-2860	Japan	1989
+#(LP, Comp)	Gong	SLPXL 37266	Hungary	1989
+#(CD, Album, RE)	Atlantic, Wea International	5228-2	US	1990
+#(CD, Comp)	Warner Music France	2292-53066-2	France	Unknown
+#(CD, Comp)	WEA	2292-53066-2	Germany	Unknown
+#(LP, Comp, RE)	WEA, WEA	K 99 183, 99 183	Europe	Unknown	1
+  ravin:
+    name:     Du jazz dans le ravin
+    artists:  [gainsbourg]
+    styles:   [jazz]
+    releases: []
+  forever:
+    name:     Forever changes
+    artists:  [love]
+    styles:   [rock, folk]
+    releases: []
+  soul_of_jam:
+    name:     Mr Soul of Jamaica
+    styles:   [rocksteady, reggae]
+    artists:  [alton]
+  sings_rock:
+    name:     Sings Rock and Soul
+    styles:   [rocksteady, reggae]
+    artists:  [alton]
+  showcase:
+    name:     Showcase
+    styles:   [rocksteady, reggae]
+    artists:  [alton]
+  new_day:
+    name:     A New Day
+    styles:   [rocksteady, reggae]
+    artists:  [alton]
+

@@ -1,7 +1,7 @@
-var React  = require('react');
-var Reflux = require('reflux');
-var Router = require('react-router');
-
+var React          = require('react');
+var Reflux         = require('reflux');
+var Router         = require('react-router');
+var Link           = Router.Link;
 var ArtistSkills   = require('./ArtistSkills.jsx');
 var ArtistGroups   = require('./ArtistGroups.jsx');
 var ArtistMasters  = require('./ArtistMasters.jsx');
@@ -31,7 +31,9 @@ var Artist = React.createClass({
     },
 
     _onArtistUpdate(artist) {
-        this.setState({ artist: artist });
+        this.setState({
+            artist: artist
+        });
     },
 
     render() {
@@ -46,6 +48,11 @@ var Artist = React.createClass({
 
         return (
             <div>
+                <div className="breadcrumbs">
+                    <Link to="index">
+                        <i className="fa fa-angle-left"/> artists
+                    </Link>
+                </div>
                 <h2 className="page-title">{this.state.artist.name}</h2>
                 <div>
                     <ArtistSkills skills={this.state.artist.skills}/>

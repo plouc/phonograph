@@ -16,6 +16,10 @@ var SimilarArtists = React.createClass({
         };
     },
 
+    componentWillReceiveProps(props) {
+        ArtistsActions.similars(props.artist.id);
+    },
+
     componentWillMount() {
         ArtistsActions.similars(this.props.artist.id);
         this.listenTo(SimilarArtistsStore, this._onStoreUpdate);
@@ -29,6 +33,7 @@ var SimilarArtists = React.createClass({
 
     render() {
         var artistNodes = this.state.artists.map(artist => {
+            console.log(artist.id);
             return (
                 <Link key={artist.id} to="artist" params={{ artist_id: artist.id }} className="similar-artist">
                     {artist.name}

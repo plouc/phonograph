@@ -28,23 +28,34 @@ var ArtistMasters = React.createClass({
     },
 
     render() {
-        var masterNodes
+        var contentNode;
         if (this.state.masters.length > 0) {
-            masterNodes = this.state.masters.map(master => {
+            var masterNodes = this.state.masters.map(master => {
                 return (
-                    <Link key={master.id} to="artist" params={{ artist_id: master.id }} className="artist__master">
-                        {master.name}
-                    </Link>
+                    <tr>
+                        <td>
+                            <Link key={master.id} to="master" params={{ master_id: master.id }} className="artist__master">
+                                {master.name}
+                            </Link>
+                        </td>
+                    </tr>
                 );
             });
+            contentNode = (
+                <table>
+                    <tbody>
+                        {masterNodes}
+                    </tbody>
+                </table>
+            );
         } else {
-            masterNodes = <p>No item found.</p>
+            contentNode = <p>No item found.</p>
         }
 
         return (
             <div className="artist__masters">
                 <h4 className="artist__masters__title">Played in</h4>
-                {masterNodes}
+                {contentNode}
             </div>
         );
     }

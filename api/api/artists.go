@@ -18,6 +18,18 @@ type Artist struct {
 	Embedded interface{} `json:"_embedded"`
 }
 
+type ArtistsCollection struct {
+	HalCollection
+	Pager   *Pager   `json:"pager"`
+	Results *Artists `json:"results"`
+}
+
+func (ac *ArtistsCollection) halify() {
+	ac.Links.Self = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page)
+	ac.Links.Prev = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page - 1)
+	ac.Links.Next = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page + 1)
+}
+
 type Artists []*Artist
 
 func ArtistFromNode(node *neoism.Node) *Artist {
@@ -51,12 +63,6 @@ func (a *Artist) PlayedIn(master *Master) *Artist {
 
 func (a *Artist) AddMembership(artist *Artist) *Artist {
 	a.node.Relate("MEMBER_OF", artist.Id, nil)
-
-	return a
-}
-
-func (a *Artist) memberOf(group *Artist) *Artist {
-	a.Groups = append(a.Groups, group)
 
 	return a
 }
@@ -117,19 +123,18 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 
 	for _, res := range results {
 		if res.NodeId != 0 {
-			fmt.Printf("%s\n", res.RelType)
 			if res.RelType == "HAS_SKILL" {
 				skill := SkillFromNode(&res.N)
 				skill.Id = res.NodeId
 				skill.halify()
-				artist.hasSkill(skill)
+				artist.Skills = append(artist.Skills, skill)
 			}
 
 			if res.RelType == "MEMBER_OF" {
 				group := ArtistFromNode(&res.N)
 				group.Id = res.NodeId
 				group.halify()
-				artist.memberOf(group)
+				artist.Groups = append(artist.Groups, group)
 			}
 		}
 	}
@@ -157,21 +162,28 @@ func (am *ArtistsManager) Create(artistName string) *Artist {
 }
 
 
-func (am *ArtistsManager) Find() Artists {
+func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 	results := []struct {
 		A        neoism.Node
 		ArtistId int
 		S        neoism.Node
 		SkillId  int
+		Total    int
 	}{}
 
 	cq := neoism.CypherQuery{
 		Statement: `
-			MATCH (a:Artist)
+			MATCH (a:Artist), (b:Artist)
+			WITH a, count(b) AS total
+			ORDER BY a.name ASC
+			SKIP {offset} LIMIT {limit}
 			OPTIONAL MATCH (a)-[HAS_SKILL]->(s:Skill)
-			RETURN a, id(a) AS artistId, s, id(s) AS skillId
-			ORDER BY a.name, s.name
+			RETURN a, id(a) AS artistId, s, id(s) AS skillId, total
 		`,
+		Parameters: neoism.Props{
+			"offset": pager.Offset(),
+			"limit":  pager.PerPage,
+		},
 		Result: &results,
 	}
 
@@ -181,25 +193,35 @@ func (am *ArtistsManager) Find() Artists {
 
 	artists := Artists{}
 
-	for _, res := range results {
-		_, ok := artistsById[res.ArtistId]
-		if !ok {
-			artistsById[res.ArtistId] = ArtistFromNode(&res.A)
-			artistsById[res.ArtistId].Id = res.ArtistId
-			artistsById[res.ArtistId].halify()
+	if len(results) > 0 {
+		pager.SetTotal(results[0].Total)
+		for _, res := range results {
+			_, ok := artistsById[res.ArtistId]
+			if !ok {
+				artistsById[res.ArtistId] = ArtistFromNode(&res.A)
+				artistsById[res.ArtistId].Id = res.ArtistId
+				artistsById[res.ArtistId].halify()
 
-			artists = append(artists, artistsById[res.ArtistId])
-		}
+				artists = append(artists, artistsById[res.ArtistId])
+			}
 
-		if res.SkillId != 0 {
-			skill := SkillFromNode(&res.S)
-			skill.Id = res.SkillId
-			skill.halify()
-			artistsById[res.ArtistId].hasSkill(skill)
+			if res.SkillId != 0 {
+				skill := SkillFromNode(&res.S)
+				skill.Id = res.SkillId
+				skill.halify()
+				artistsById[res.ArtistId].hasSkill(skill)
+			}
 		}
 	}
 
-	return artists
+	collection := ArtistsCollection{
+		Pager:   pager,
+		Results: &artists,
+	}
+
+	collection.halify()
+
+	return &collection
 }
 
 

@@ -3,6 +3,7 @@ var Reflux         = require('reflux');
 var ArtistsActions = require('./../actions/ArtistsActions');
 var ArtistsStore   = require('./../stores/ArtistsStore');
 var ArtistRow      = require('./ArtistRow.jsx');
+var Pager          = require('./Pager.jsx');
 
 var Artists = React.createClass({
     mixins: [
@@ -11,7 +12,8 @@ var Artists = React.createClass({
 
     getInitialState() {
         return {
-            artists: []
+            artists: [],
+            pager:   null
         }
     },
 
@@ -21,8 +23,17 @@ var Artists = React.createClass({
         ArtistsActions.list();
     },
 
-    _onArtistsUpdate(artists) {
-        this.setState({ artists: artists });
+    _onArtistsUpdate(data) {
+        this.setState({
+            artists: data.results,
+            pager:   data.pager
+        });
+    },
+
+    _onPageUpdate(page) {
+        ArtistsActions.list({
+            page: page
+        });
     },
 
     render() {
@@ -30,9 +41,15 @@ var Artists = React.createClass({
             return <ArtistRow artist={artist} key={artist.id} />
         });
 
+        var pagerNode = null;
+        if (this.state.pager) {
+            pagerNode = <Pager pager={this.state.pager} handler={this._onPageUpdate}/>
+        }
+
         return (
             <div>
                 <h2 className="page-title">Artists</h2>
+                {pagerNode}
                 <table>
                     <tbody>
                         {artistNodes}

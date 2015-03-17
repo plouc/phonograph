@@ -1,7 +1,7 @@
 package api
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 	"github.com/jmcvetta/neoism"
 )
@@ -9,14 +9,32 @@ import (
 type Release struct {
 	node *neoism.Node
 
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	Id      int    `json:"id"`
+	Year    int    `json:"year"`
+	Country string `json:"country"`
+
+	Links   Links  `json:"_links"`
 }
 
-func (r *Release) ProducedBy(label *Label) *Release {
-	r.node.Relate("PRODUCED_BY", label.Id(), nil)
+func ReleaseFromNode(node *neoism.Node) *Release {
+	year    := int(node.Data["year"].(float64))
+	country := node.Data["country"].(string)
+
+	return &Release{
+		node:    node,
+		Year:    year,
+		Country: country,
+	}
+}
+
+func (r *Release) AddLabel(label *Label) *Release {
+	r.node.Relate("BY_LABEL", label.Id(), nil)
 
 	return r
+}
+
+func (r *Release) halify() {
+	r.Links.Self = fmt.Sprintf("http://localhost:2000/releases/%d", r.Id)
 }
 
 type Releases []Release
@@ -31,8 +49,11 @@ func NewReleasesManager (db *neoism.Database) *ReleasesManager {
 	}
 }
 
-func (rm *ReleasesManager) Create(releaseName string) *Release {
-	node, err := rm.db.CreateNode(neoism.Props{"name": releaseName})
+func (rm *ReleasesManager) Create(year int, country string) *Release {
+	node, err := rm.db.CreateNode(neoism.Props{
+		"year":    year,
+		"country": country,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,9 +61,10 @@ func (rm *ReleasesManager) Create(releaseName string) *Release {
 	node.AddLabel("Release")
 
 	release := &Release{
-		node: node,
-		Id:   node.Id(),
-		Name: releaseName,
+		node:    node,
+		Id:      node.Id(),
+		Year:    year,
+		Country: country,
 	}
 
 	return release

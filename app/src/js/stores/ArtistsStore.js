@@ -8,22 +8,27 @@ var _artists = [];
 var ArtistsStore = Reflux.createStore({
     listenables: ArtistsActions,
 
-    list: function () {
-        request.get('http://localhost:2000/artists').end(function (err, res) {
+    list(params) {
+        params = params || {};
+
+        var req = request.get('http://localhost:2000/artists')
+        if (params.page) {
+            req.query({ page: params.page });
+        }
+
+        req.end((err, res) => {
             _artists = res.body;
 
             this.trigger(_artists);
-        }.bind(this));
+        });
     },
 
-    get: function (id) {
-        request.get('http://localhost:2000/artists/' + id).end(function (err, res) {
+    get(id) {
+        request.get('http://localhost:2000/artists/' + id).end((err, res) => {
             _artist = res.body;
 
-            console.log(_artist);
-
             this.trigger(_artist);
-        }.bind(this));
+        });
     }
 });
 

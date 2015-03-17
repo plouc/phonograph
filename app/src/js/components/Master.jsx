@@ -1,8 +1,10 @@
 var React          = require('react');
 var Reflux         = require('reflux');
 var Router         = require('react-router');
+var Link           = Router.Link;
 var MastersActions = require('./../actions/MastersActions');
 var MastersStore   = require('./../stores/MastersStore');
+var ReleaseNodes   = require('./MasterReleases.jsx');
 
 var Master = React.createClass({
     mixins: [
@@ -12,7 +14,7 @@ var Master = React.createClass({
 
     getInitialState() {
         return {
-            masters: null
+            master: null
         };
     },
 
@@ -29,12 +31,41 @@ var Master = React.createClass({
     },
 
     render() {
-        var trackNodes = null;
+        var trackNodes  = null;
+        var releaseNode = null;
+        var artistNode  = null;
+
+        if (this.state.master !== null) {
+            releaseNode = <ReleaseNodes releases={this.state.master.releases}/>
+
+            var artistNodes = this.state.master.artists.map(artist => {
+                return (
+                    <Link ref={artist.id}
+                          to="artist"
+                          params={{ artist_id: artist.id }}
+                          className="master__artist"
+                    >
+                        {artist.name}
+                    </Link>
+                );
+            });
+
+            artistNode = <div className="master__artists">by {artistNodes}</div>;
+        }
+
+
 
         return (
             <div>
+                <div className="breadcrumbs">
+                    <Link to="masters">
+                        <i className="fa fa-angle-left"/> masters
+                    </Link>
+                </div>
                 <h2 className="page-title">{this.state.master ? this.state.master.name : ''}</h2>
+                {artistNode}
                 {trackNodes}
+                {releaseNode}
             </div>
         );
     }

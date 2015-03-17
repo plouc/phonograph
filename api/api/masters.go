@@ -11,17 +11,39 @@ type Master struct {
 
 	Id       int         `json:"id"`
 	Name     string      `json:"name"`
+	Releases []*Release  `json:"releases"`
+	Artists  []*Artist   `json:"artists"`
 
 	Links    Links       `json:"_links"`
 	Embedded interface{} `json:"_embedded"`
+}
+
+type Masters []*Master
+
+type MastersCollection struct {
+	HalCollection
+	Pager   *Pager   `json:"pager"`
+	Results *Masters `json:"results"`
+}
+
+func (mc *MastersCollection) halify() {
+	mc.Links.Self = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page)
+	mc.Links.Prev = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page - 1)
+	mc.Links.Next = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page + 1)
+}
+
+type MastersManager struct {
+	db *neoism.Database
 }
 
 func MasterFromNode(node *neoism.Node) *Master {
 	name := node.Data["name"].(string)
 
 	return &Master{
-		node: node,
-		Name: name,
+		node:     node,
+		Name:     name,
+		Releases: []*Release{},
+		Artists:  []*Artist{},
 	}
 }
 
@@ -31,15 +53,14 @@ func (m *Master) AddRelease(release *Release) *Master {
 	return m
 }
 
-func (m *Master) halify() {
-	m.Links.Self = fmt.Sprintf("http://localhost:2000/masters/%d", m.Id)
+func (m *Master) AddStyle(style *Style) *Master {
+	m.node.Relate("CLASSIFIED_IN", style.Id, nil)
+
+	return m
 }
 
-
-type Masters []*Master
-
-type MastersManager struct {
-	db *neoism.Database
+func (m *Master) halify() {
+	m.Links.Self = fmt.Sprintf("http://localhost:2000/masters/%d", m.Id)
 }
 
 func NewMastersManager(db *neoism.Database) *MastersManager {
@@ -57,16 +78,17 @@ func (mm *MastersManager) Create(masterName string) *Master {
 	node.AddLabel("Master")
 
 	master := &Master{
-		node: node,
-		Id:   node.Id(),
-		Name: masterName,
+		node:     node,
+		Id:       node.Id(),
+		Name:     masterName,
+		Releases: []*Release{},
 	}
 
 	return master
 }
 
 
-func (mm *MastersManager) Find() Masters {
+func (mm *MastersManager) Find(pager *Pager) *MastersCollection {
 	results := []struct {
 		M        neoism.Node
 		MasterId int
@@ -93,7 +115,69 @@ func (mm *MastersManager) Find() Masters {
 		masters = append(masters, master)
 	}
 
-	return masters
+	collection := MastersCollection{
+		Pager:   pager,
+		Results: &masters,
+	}
+
+	collection.halify()
+
+	return &collection
+}
+
+
+func (mm *MastersManager) FindById(id int) (*Master, error) {
+	results := []struct {
+		M       neoism.Node
+		RelType string
+		NodeId  int
+		N       neoism.Node
+	}{}
+
+	cq := neoism.CypherQuery{
+		Statement: `
+			MATCH (m:Master)
+			WHERE id(m) = {nodeId}
+			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN]-(n)
+			RETURN m, type(r) AS relType, id(n) AS nodeId, n
+			ORDER BY type(r), n.name
+		`,
+		Parameters: neoism.Props{"nodeId": id},
+		Result:     &results,
+	}
+
+	err := mm.db.Cypher(&cq)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if len(results) == 0 {
+		return nil, NotFound
+	}
+
+	master := MasterFromNode(&results[0].M)
+	master.Id = id
+
+	for _, res := range results {
+		if res.NodeId != 0 {
+			if res.RelType == "HAS_RELEASE" {
+				rel := ReleaseFromNode(&res.N)
+				rel.Id = res.NodeId
+				rel.halify()
+				master.Releases = append(master.Releases, rel)
+			}
+			if res.RelType == "PLAYED_IN" {
+				art := ArtistFromNode(&res.N)
+				art.Id = res.NodeId
+				art.halify()
+				master.Artists = append(master.Artists, art)
+			}
+		}
+	}
+
+	master.halify()
+
+	return master, nil
 }
 
 

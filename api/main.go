@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"encoding/json"
 
 	"github.com/rs/cors"
 	"github.com/jmcvetta/neoism"
@@ -33,20 +32,13 @@ func main() {
 	})
 
 	router.HandleFunc("/artists", func (w http.ResponseWriter, r *http.Request) {
-		a := artists.Find()
+		a := artists.Find(api.NewPager(r.URL.Query()))
 
-		b, err := json.MarshalIndent(a, "", "  ")
-		if err != nil {
-			fmt.Println("error:", err)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(b))
+		api.JsonResponse(w, a)
 	})
 
 	router.HandleFunc("/artists/{artistId}", func (w http.ResponseWriter, r * http.Request) {
-		vars := mux.Vars(r)
-		artistId, err := strconv.Atoi(vars["artistId"])
+		artistId, err := strconv.Atoi(mux.Vars(r)["artistId"])
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -56,18 +48,11 @@ func main() {
 			log.Panic(err)
 		}
 
-		j, err := json.MarshalIndent(artist, "", "  ")
-		if err != nil {
-			fmt.Println("error:", err)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(j))
+		api.JsonResponse(w, artist)
 	})
 
 	router.HandleFunc("/artists/{artistId}/similars", func (w http.ResponseWriter, r * http.Request) {
-		vars := mux.Vars(r)
-		artistId, err := strconv.Atoi(vars["artistId"])
+		artistId, err := strconv.Atoi(mux.Vars(r)["artistId"])
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -79,13 +64,7 @@ func main() {
 
 		similars := artists.Similars(artist)
 
-		j, err := json.MarshalIndent(similars, "", "  ")
-		if err != nil {
-			fmt.Println("error:", err)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(j))
+		api.JsonResponse(w, similars)
 	})
 
 	router.HandleFunc("/artists/{artistId}/masters", func (w http.ResponseWriter, r * http.Request) {
@@ -102,35 +81,33 @@ func main() {
 
 		artistMasters := masters.PlayedBy(artist)
 
-		j, err := json.MarshalIndent(artistMasters, "", "  ")
-		if err != nil {
-			fmt.Println("error:", err)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(j))
+		api.JsonResponse(w, artistMasters)
 	})
 
 	router.HandleFunc("/masters", func (w http.ResponseWriter, r *http.Request) {
-		m := masters.Find()
+		m := masters.Find(api.NewPager(r.URL.Query()))
 
-		b, err := json.MarshalIndent(m, "", "  ")
+		api.JsonResponse(w, m)
+	})
+
+	router.HandleFunc("/masters/{masterId}", func (w http.ResponseWriter, r * http.Request) {
+		masterId, err := strconv.Atoi(mux.Vars(r)["masterId"])
 		if err != nil {
-			fmt.Println("error:", err)
+			log.Fatal(err)
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(b))
+		master, err := masters.FindById(masterId)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		api.JsonResponse(w, master)
 	})
 
 	router.HandleFunc("/labels", func (w http.ResponseWriter, r *http.Request) {
 		l := labels.Find()
 
-		b, err := json.MarshalIndent(l, "", "  ")
-		if err != nil {
-			fmt.Println("error:", err)
-		}
-		fmt.Fprintln(w, string(b))
+		api.JsonResponse(w, l)
 	})
 
 	handler := cors.Default().Handler(router)
