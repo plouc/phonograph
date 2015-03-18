@@ -170,7 +170,7 @@ artist:
 master:
   night_in:
     name:     Night in Tunisia
-    artists:  [art]
+    artists:  [art_mess]
     styles:   [jazz]
     tracks:
       - { name: A Night In Tunisia }
@@ -183,6 +183,13 @@ master:
       - { year: 1973, label: liberty,   country: US }
       - { year: 2013, label: blue_note, country: US }
       - { year: 1992, label: blue_note, country: Japan }
+
+      #A Night In Tunisia ‎(LP, Album, Mono)	Blue Note	BLP 4049	US	1960
+      #A Night In Tunisia ‎(LP, Album)	Liberty	LT-84049	US	1973
+      #A Night In Tunisia ‎(5xFile, AIFF, Album, RM, 24-)	Blue Note	none	US	2013
+      #A Night In Tunisia ‎(LP, Album, RE)	Blue Note, Blue Note, Blue Note	BN 4049, BST 84049, 84049	Japan	1992
+      #A Night In Tunisia ‎(LP, Album)	Blue Note	BST 84049	US	1960
+
   best_of_astrud:
     name:     The very best of Astrud Gilberto
     artists:  [astrud]
@@ -272,6 +279,19 @@ master:
     name:     Mr Soul of Jamaica
     styles:   [rocksteady, reggae]
     artists:  [alton]
+    tracks:
+      - { name: Breaking Up }
+      - { name: Why Birds Follow Spring }
+      - { name: I Can't Stop Now }
+      - { name: Ain't That Loving You }
+      - { name: You Make Me Happy }
+      - { name: Remember That Sunday }
+      - { name: All My Tears Come Rolling }
+      - { name: Baby I Love You }
+      - { name: Chatty Chatty }
+      - { name: Willow Tree }
+      - { name: If I Could Rule The World }
+      - { name: What Does It Take }
   sings_rock:
     name:     Sings Rock and Soul
     styles:   [rocksteady, reggae]
@@ -284,4 +304,13 @@ master:
     name:     A New Day
     styles:   [rocksteady, reggae]
     artists:  [alton]
+    tracks:
+      - { name: Seven Days A Week }
+      - { name: Stronger }
+      - { name: I'll Be There }
+      - { name: Dance All Night }
+      - { name: Love On Top }
+      - { name: Children Of The Ghetto }
+      - { name: In A Vision }
+      - { name: Why Birds Follow Spring }
 

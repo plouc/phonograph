@@ -2,26 +2,22 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"github.com/jmcvetta/neoism"
+	"log"
 )
 
 type Style struct {
-	node     *neoism.Node
+	ApiNode
 
-	Id       int         `json:"id"`
-	Name     string      `json:"name"`
-
-	Links    Links       `json:"_links"`
-	Embedded interface{} `json:"_embedded"`
+	Name string `json:"name"`
 }
 
 func StyleFromNode(node *neoism.Node) *Style {
 	name := node.Data["name"].(string)
 
 	return &Style{
-		node: node,
-		Name: name,
+		ApiNode: ApiNode{node: node},
+		Name:    name,
 	}
 }
 
@@ -35,7 +31,7 @@ type StylesManager struct {
 	db *neoism.Database
 }
 
-func NewStylesManager (db *neoism.Database) *StylesManager {
+func NewStylesManager(db *neoism.Database) *StylesManager {
 	return &StylesManager{
 		db: db,
 	}
@@ -50,8 +46,10 @@ func (sm *StylesManager) Create(styleName string) *Style {
 	node.AddLabel("Style")
 
 	style := &Style{
-		node: node,
-		Id:   node.Id(),
+		ApiNode: ApiNode{
+			node: node,
+			Id:   node.Id(),
+		},
 		Name: styleName,
 	}
 

@@ -2,35 +2,30 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"github.com/jmcvetta/neoism"
+	"log"
 )
 
 type Master struct {
-	node     *neoism.Node
+	ApiNode
 
-	Id       int         `json:"id"`
-	Name     string      `json:"name"`
-	Releases []*Release  `json:"releases"`
-	Artists  []*Artist   `json:"artists"`
-	Tracks   []*Track    `json:"tracks"`
-
-	Links    Links       `json:"_links"`
-	Embedded interface{} `json:"_embedded"`
+	Name     string     `json:"name"`
+	Releases []*Release `json:"releases"`
+	Artists  []*Artist  `json:"artists"`
+	Tracks   []*Track   `json:"tracks"`
 }
 
 type Masters []*Master
 
 type MastersCollection struct {
-	HalCollection
-	Pager   *Pager   `json:"pager"`
+	ApiCollection
 	Results *Masters `json:"results"`
 }
 
 func (mc *MastersCollection) halify() {
 	mc.Links.Self = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page)
-	mc.Links.Prev = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page - 1)
-	mc.Links.Next = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page + 1)
+	mc.Links.Prev = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page-1)
+	mc.Links.Next = fmt.Sprintf("http://localhost:2000/masters?page=%d", mc.Pager.Page+1)
 }
 
 type MastersManager struct {
@@ -41,7 +36,7 @@ func MasterFromNode(node *neoism.Node) *Master {
 	name := node.Data["name"].(string)
 
 	return &Master{
-		node:     node,
+		ApiNode:  ApiNode{node: node},
 		Name:     name,
 		Releases: []*Release{},
 		Artists:  []*Artist{},
@@ -86,15 +81,16 @@ func (mm *MastersManager) Create(masterName string) *Master {
 	node.AddLabel("Master")
 
 	master := &Master{
-		node:     node,
-		Id:       node.Id(),
+		ApiNode: ApiNode{
+			node: node,
+			Id:   node.Id(),
+		},
 		Name:     masterName,
 		Releases: []*Release{},
 	}
 
 	return master
 }
-
 
 func (mm *MastersManager) Find(pager *Pager) *MastersCollection {
 	results := []struct {
@@ -124,8 +120,8 @@ func (mm *MastersManager) Find(pager *Pager) *MastersCollection {
 	}
 
 	collection := MastersCollection{
-		Pager:   pager,
-		Results: &masters,
+		ApiCollection: ApiCollection{Pager: pager},
+		Results:       &masters,
 	}
 
 	collection.halify()
@@ -133,13 +129,14 @@ func (mm *MastersManager) Find(pager *Pager) *MastersCollection {
 	return &collection
 }
 
-
 func (mm *MastersManager) FindById(id int) (*Master, error) {
 	results := []struct {
 		M       neoism.Node
 		RelType string
 		NodeId  int
 		N       neoism.Node
+		LabelId int
+		L       neoism.Node
 	}{}
 
 	cq := neoism.CypherQuery{
@@ -147,7 +144,8 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 			MATCH (m:Master)
 			WHERE id(m) = {nodeId}
 			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN|HAS_TRACK]-(n)
-			RETURN m, type(r) AS relType, id(n) AS nodeId, n
+			OPTIONAL MATCH (n:Release)-[BY_LABEL]->(l:Label)
+			RETURN m, type(r) AS relType, id(n) AS nodeId, n, id(l) AS labelId, l
 			ORDER BY type(r), n.name
 		`,
 		Parameters: neoism.Props{"nodeId": id},
@@ -166,22 +164,37 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 	master := MasterFromNode(&results[0].M)
 	master.Id = id
 
+	nodesById := make(map[int]interface{})
+
 	for _, res := range results {
 		if res.NodeId != 0 {
 			if res.RelType == "HAS_RELEASE" {
-				rel := ReleaseFromNode(&res.N)
-				rel.Id = res.NodeId
-				rel.halify()
-				master.Releases = append(master.Releases, rel)
+				_, ok := nodesById[res.NodeId]
+				if !ok {
+					rel := ReleaseFromNode(&res.N)
+					nodesById[res.NodeId] = rel
+					rel.Id = res.NodeId
+					rel.halify()
+					master.Releases = append(master.Releases, rel)
+				}
+				if res.LabelId != 0 {
+					lab := LabelFromNode(&res.L)
+					lab.Id = res.LabelId
+					lab.halify()
+					rel := nodesById[res.NodeId].(*Release)
+					rel.Labels = append(rel.Labels, lab)
+				}
 			}
 			if res.RelType == "PLAYED_IN" {
 				art := ArtistFromNode(&res.N)
+				nodesById[res.NodeId] = art
 				art.Id = res.NodeId
 				art.halify()
 				master.Artists = append(master.Artists, art)
 			}
 			if res.RelType == "HAS_TRACK" {
 				tra := TrackFromNode(&res.N)
+				nodesById[res.NodeId] = tra
 				tra.Id = res.NodeId
 				tra.halify()
 				master.Tracks = append(master.Tracks, tra)
@@ -194,7 +207,6 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 	return master, nil
 }
 
-
 func (mm *MastersManager) PlayedBy(artist *Artist) Masters {
 	results := []struct {
 		M        neoism.Node
@@ -205,12 +217,12 @@ func (mm *MastersManager) PlayedBy(artist *Artist) Masters {
 		Statement: `
 			MATCH (a:Artist)
 			WHERE id(a) = {artistId}
-			MATCH (a)-[PLAYED_IN]->(m:Master)
+			MATCH (a)-[r:MEMBER_OF|PLAYED_IN*]->(m:Master)
 			RETURN m, id(m) AS masterId
 			ORDER BY m.name
 		`,
 		Parameters: neoism.Props{"artistId": artist.Id},
-		Result: &results,
+		Result:     &results,
 	}
 
 	mm.db.Cypher(&cq)

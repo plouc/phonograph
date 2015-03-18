@@ -3,31 +3,26 @@ package api
 import (
 	"fmt"
 	"log"
+
 	"github.com/jmcvetta/neoism"
 )
 
 type Artist struct {
-	node     *neoism.Node
-
-	Id       int         `json:"id"`
-	Name     string      `json:"name"`
-	Skills   []*Skill    `json:"skills"`
-	Groups   []*Artist   `json:"groups"`
-
-	Links    Links       `json:"_links"`
-	Embedded interface{} `json:"_embedded"`
+	ApiNode
+	Name   string    `json:"name"`
+	Skills []*Skill  `json:"skills"`
+	Groups []*Artist `json:"groups"`
 }
 
 type ArtistsCollection struct {
-	HalCollection
-	Pager   *Pager   `json:"pager"`
+	ApiCollection
 	Results *Artists `json:"results"`
 }
 
 func (ac *ArtistsCollection) halify() {
 	ac.Links.Self = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page)
-	ac.Links.Prev = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page - 1)
-	ac.Links.Next = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page + 1)
+	ac.Links.Prev = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page-1)
+	ac.Links.Next = fmt.Sprintf("http://localhost:2000/artists?page=%d", ac.Pager.Page+1)
 }
 
 type Artists []*Artist
@@ -36,10 +31,10 @@ func ArtistFromNode(node *neoism.Node) *Artist {
 	name := node.Data["name"].(string)
 
 	return &Artist{
-		node:   node,
-		Name:   name,
-		Skills: []*Skill{},
-		Groups: []*Artist{},
+		ApiNode: ApiNode{node: node},
+		Name:    name,
+		Skills:  []*Skill{},
+		Groups:  []*Artist{},
 	}
 }
 
@@ -77,13 +72,11 @@ func (a *Artist) halify() {
 	a.Links.Self = fmt.Sprintf("http://localhost:2000/artists/%d", a.Id)
 }
 
-
-
 type ArtistsManager struct {
 	db *neoism.Database
 }
 
-func NewArtistsManager (db *neoism.Database) *ArtistsManager {
+func NewArtistsManager(db *neoism.Database) *ArtistsManager {
 	return &ArtistsManager{
 		db: db,
 	}
@@ -144,7 +137,6 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	return artist, nil
 }
 
-
 func (am *ArtistsManager) Create(artistName string) *Artist {
 	node, err := am.db.CreateNode(neoism.Props{"name": artistName})
 	if err != nil {
@@ -154,13 +146,14 @@ func (am *ArtistsManager) Create(artistName string) *Artist {
 	node.AddLabel("Artist")
 
 	return &Artist{
-		node:   node,
-		Id:     node.Id(),
+		ApiNode: ApiNode{
+			node: node,
+			Id:   node.Id(),
+		},
 		Name:   artistName,
 		Skills: []*Skill{},
 	}
 }
-
 
 func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 	results := []struct {
@@ -215,15 +208,14 @@ func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 	}
 
 	collection := ArtistsCollection{
-		Pager:   pager,
-		Results: &artists,
+		ApiCollection: ApiCollection{Pager: pager},
+		Results:       &artists,
 	}
 
 	collection.halify()
 
 	return &collection
 }
-
 
 func (am *ArtistsManager) Similars(a *Artist) Artists {
 	results := []struct {
@@ -240,7 +232,7 @@ func (am *ArtistsManager) Similars(a *Artist) Artists {
 			ORDER BY b.name
 		`,
 		Parameters: neoism.Props{"artistId": a.Id},
-		Result: &results,
+		Result:     &results,
 	}
 
 	am.db.Cypher(&cq)
@@ -254,6 +246,6 @@ func (am *ArtistsManager) Similars(a *Artist) Artists {
 
 		artists = append(artists, artist)
 	}
-	
+
 	return artists
 }

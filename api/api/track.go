@@ -2,33 +2,29 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"github.com/jmcvetta/neoism"
+	"log"
 )
 
 type Track struct {
-	node     *neoism.Node
+	ApiNode
 
-	Id       int         `json:"id"`
-	Name     string      `json:"name"`
-	Duration int         `json:"duration"`
-
-	Links    Links       `json:"_links"`
-	Embedded interface{} `json:"_embedded"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Duration int    `json:"duration"`
 }
 
 type Tracks []*Track
 
 type TracksCollection struct {
-	HalCollection
-	Pager   *Pager  `json:"pager"`
+	ApiCollection
 	Results *Tracks `json:"results"`
 }
 
 func (mc *TracksCollection) halify() {
 	mc.Links.Self = fmt.Sprintf("http://localhost:2000/tracks?page=%d", mc.Pager.Page)
-	mc.Links.Prev = fmt.Sprintf("http://localhost:2000/tracks?page=%d", mc.Pager.Page - 1)
-	mc.Links.Next = fmt.Sprintf("http://localhost:2000/tracks?page=%d", mc.Pager.Page + 1)
+	mc.Links.Prev = fmt.Sprintf("http://localhost:2000/tracks?page=%d", mc.Pager.Page-1)
+	mc.Links.Next = fmt.Sprintf("http://localhost:2000/tracks?page=%d", mc.Pager.Page+1)
 }
 
 type TracksManager struct {
@@ -36,11 +32,11 @@ type TracksManager struct {
 }
 
 func TrackFromNode(node *neoism.Node) *Track {
-	name     := node.Data["name"].(string)
+	name := node.Data["name"].(string)
 	duration := int(node.Data["duration"].(float64))
 
 	return &Track{
-		node:     node,
+		ApiNode:  ApiNode{node: node},
 		Name:     name,
 		Duration: duration,
 	}
@@ -68,7 +64,7 @@ func (tm *TracksManager) Create(trackName string, trackDuration int) *Track {
 	node.AddLabel("Track")
 
 	track := &Track{
-		node:     node,
+		ApiNode:  ApiNode{node: node},
 		Id:       node.Id(),
 		Name:     trackName,
 		Duration: trackDuration,
@@ -76,7 +72,6 @@ func (tm *TracksManager) Create(trackName string, trackDuration int) *Track {
 
 	return track
 }
-
 
 func (tm *TracksManager) Find(pager *Pager) *TracksCollection {
 	results := []struct {
@@ -106,8 +101,8 @@ func (tm *TracksManager) Find(pager *Pager) *TracksCollection {
 	}
 
 	collection := TracksCollection{
-		Pager:   pager,
-		Results: &tracks,
+		ApiCollection: ApiCollection{Pager: pager},
+		Results:       &tracks,
 	}
 
 	collection.halify()

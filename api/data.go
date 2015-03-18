@@ -12,7 +12,7 @@ import (
 )
 
 type Fixtures struct {
-	Artist map[string]struct{
+	Artist map[string]struct {
 		Name   string
 		Skills []string
 		Styles []string
@@ -21,15 +21,15 @@ type Fixtures struct {
 	Label  map[string]string
 	Skill  map[string]string
 	Style  map[string]string
-	Master map[string]struct{
+	Master map[string]struct {
 		Name    string
-		Artists  []string
-		Styles   []string
-		Tracks   []struct{
+		Artists []string
+		Styles  []string
+		Tracks  []struct {
 			Name     string
 			Duration int
 		}
-		Releases []struct{
+		Releases []struct {
 			Year    int
 			Label   string
 			Country string
@@ -46,7 +46,6 @@ type Refs struct {
 	releases map[string]*api.Release
 }
 
-
 func main() {
 	data, err := ioutil.ReadFile("./sample.yml")
 	if err != nil {
@@ -60,7 +59,6 @@ func main() {
 		log.Fatalf("error: %v", err)
 	}
 
-
 	db, err := neoism.Connect("http://localhost:7474/db/data")
 	if err != nil {
 		log.Fatal(err)
@@ -72,14 +70,13 @@ func main() {
 	}
 	db.Cypher(&cq)
 
-
-	labels   := api.NewLabelsManager(db)
-	artists  := api.NewArtistsManager(db)
-	masters  := api.NewMastersManager(db)
-	tracks   := api.NewTracksManager(db)
+	labels := api.NewLabelsManager(db)
+	artists := api.NewArtistsManager(db)
+	masters := api.NewMastersManager(db)
+	tracks := api.NewTracksManager(db)
 	releases := api.NewReleasesManager(db)
-	skills   := api.NewSkillsManager(db)
-	styles   := api.NewStylesManager(db)
+	skills := api.NewSkillsManager(db)
+	styles := api.NewStylesManager(db)
 
 	refs := Refs{
 		labels:   make(map[string]*api.Label),
@@ -89,7 +86,6 @@ func main() {
 		skills:   make(map[string]*api.Skill),
 		styles:   make(map[string]*api.Style),
 	}
-
 
 	//////////////////
 	// Create nodes //
@@ -129,7 +125,6 @@ func main() {
 		}
 		refs.masters[k] = master
 	}
-
 
 	/////////////////////
 	// Build relations //

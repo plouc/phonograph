@@ -2,26 +2,22 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"github.com/jmcvetta/neoism"
+	"log"
 )
 
 type Skill struct {
-	node     *neoism.Node
+	ApiNode
 
-	Id       int         `json:"id"`
-	Name     string      `json:"name"`
-
-	Links    Links       `json:"_links"`
-	Embedded interface{} `json:"_embedded"`
+	Name string `json:"name"`
 }
 
 func SkillFromNode(node *neoism.Node) *Skill {
 	name := node.Data["name"].(string)
 
 	return &Skill{
-		node: node,
-		Name: name,
+		ApiNode: ApiNode{node: node},
+		Name:    name,
 	}
 }
 
@@ -35,7 +31,7 @@ type SkillsManager struct {
 	db *neoism.Database
 }
 
-func NewSkillsManager (db *neoism.Database) *SkillsManager {
+func NewSkillsManager(db *neoism.Database) *SkillsManager {
 	return &SkillsManager{
 		db: db,
 	}
@@ -50,8 +46,10 @@ func (sm *SkillsManager) Create(skillName string) *Skill {
 	node.AddLabel("Skill")
 
 	skill := &Skill{
-		node: node,
-		Id:   node.Id(),
+		ApiNode: ApiNode{
+			node: node,
+			Id:   node.Id(),
+		},
 		Name: skillName,
 	}
 

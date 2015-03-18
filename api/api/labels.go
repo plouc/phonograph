@@ -2,26 +2,27 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"github.com/jmcvetta/neoism"
+	"log"
 )
 
 type Label struct {
-	node        *neoism.Node
-	Name        string      `json:"name"`
-	Links       Links       `json:"_links"`
-	Embedded    interface{} `json:"_embedded"`
+	ApiNode
+
+	Name string `json:"name"`
 }
 
-func (l *Label) Id() int {
-	return l.node.Id()
-}
+func LabelFromNode(node *neoism.Node) *Label {
+	name := node.Data["name"].(string)
 
-func (l *Label) Halify() {
-	l.Links.Self = fmt.Sprintf("http://localhost:2000/labels/%d", 3)
-	l.Embedded = map[string]string{
-		"productions": "test",
+	return &Label{
+		ApiNode: ApiNode{node: node},
+		Name:    name,
 	}
+}
+
+func (l *Label) halify() {
+	l.Links.Self = fmt.Sprintf("http://localhost:2000/labels/%d", l.Id)
 }
 
 type Labels []Label
@@ -30,7 +31,7 @@ type LabelsManager struct {
 	db *neoism.Database
 }
 
-func NewLabelsManager (db *neoism.Database) *LabelsManager {
+func NewLabelsManager(db *neoism.Database) *LabelsManager {
 	return &LabelsManager{
 		db: db,
 	}
@@ -45,9 +46,44 @@ func (lm *LabelsManager) Create(labelName string) *Label {
 	node.AddLabel("Label")
 
 	return &Label{
-		node: node,
-		Name: labelName,
+		ApiNode: ApiNode{
+			node: node,
+			Id:   node.Id(),
+		},
+		Name:    labelName,
 	}
+}
+
+func (lm *LabelsManager) FindById(id int) (*Label, error) {
+	results := []struct {
+		L neoism.Node
+	}{}
+
+	cq := neoism.CypherQuery{
+		Statement: `
+			MATCH (l:Label)
+			WHERE id(l) = {nodeId}
+			RETURN l
+		`,
+		Parameters: neoism.Props{"nodeId": id},
+		Result:     &results,
+	}
+
+	err := lm.db.Cypher(&cq)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if len(results) == 0 {
+		return nil, NotFound
+	}
+
+	label := LabelFromNode(&results[0].L)
+	label.Id = id
+
+	label.halify()
+
+	return label, nil
 }
 
 func (lm *LabelsManager) Find() Labels {
@@ -65,7 +101,7 @@ func (lm *LabelsManager) Find() Labels {
 	lm.db.Cypher(&cq)
 
 	for k, _ := range labels {
-		labels[k].Halify()
+		labels[k].halify()
 	}
 
 	return labels
