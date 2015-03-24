@@ -1,5 +1,5 @@
 .idea
 app/node_modules
-neo4j*
+neo*
 app/dist/vinyl.*
 app/dist/fonts
