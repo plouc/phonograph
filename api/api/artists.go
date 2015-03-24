@@ -12,6 +12,7 @@ type Artist struct {
 	Name   string    `json:"name"`
 	Skills []*Skill  `json:"skills"`
 	Groups []*Artist `json:"groups"`
+	Styles []*Style  `json:"styles"`
 }
 
 type ArtistsCollection struct {
@@ -35,6 +36,7 @@ func ArtistFromNode(node *neoism.Node) *Artist {
 		Name:    name,
 		Skills:  []*Skill{},
 		Groups:  []*Artist{},
+		Styles:  []*Style{},
 	}
 }
 
@@ -94,7 +96,7 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 		Statement: `
 			MATCH (a:Artist)
 			WHERE id(a) = {nodeId}
-			OPTIONAL MATCH (a)-[r:HAS_SKILL|MEMBER_OF]->(n)
+			OPTIONAL MATCH (a)-[r:HAS_SKILL|MEMBER_OF|CLASSIFIED_IN]->(n)
 			RETURN a, type(r) AS relType, id(n) AS nodeId, n
 			ORDER BY type(r), n.name
 		`,
@@ -116,18 +118,22 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 
 	for _, res := range results {
 		if res.NodeId != 0 {
-			if res.RelType == "HAS_SKILL" {
+			switch {
+			case res.RelType == "HAS_SKILL":
 				skill := SkillFromNode(&res.N)
 				skill.Id = res.NodeId
 				skill.halify()
 				artist.Skills = append(artist.Skills, skill)
-			}
-
-			if res.RelType == "MEMBER_OF" {
+			case res.RelType == "MEMBER_OF":
 				group := ArtistFromNode(&res.N)
 				group.Id = res.NodeId
 				group.halify()
 				artist.Groups = append(artist.Groups, group)
+			case res.RelType == "CLASSIFIED_IN":
+				style := StyleFromNode(&res.N)
+				style.Id = res.NodeId
+				style.halify()
+				artist.Styles = append(artist.Styles, style)
 			}
 		}
 	}
@@ -159,8 +165,9 @@ func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 	results := []struct {
 		A        neoism.Node
 		ArtistId int
-		S        neoism.Node
-		SkillId  int
+		RelType  string
+		N        neoism.Node
+		NodeId   int
 		Total    int
 	}{}
 
@@ -170,8 +177,8 @@ func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 			WITH a, count(b) AS total
 			ORDER BY a.name ASC
 			SKIP {offset} LIMIT {limit}
-			OPTIONAL MATCH (a)-[HAS_SKILL]->(s:Skill)
-			RETURN a, id(a) AS artistId, s, id(s) AS skillId, total
+			OPTIONAL MATCH (a)-[r:HAS_SKILL|CLASSIFIED_IN]->(n)
+			RETURN a, id(a) AS artistId, type(r) AS relType, n, id(n) AS nodeId, total
 		`,
 		Parameters: neoism.Props{
 			"offset": pager.Offset(),
@@ -198,11 +205,19 @@ func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 				artists = append(artists, artistsById[res.ArtistId])
 			}
 
-			if res.SkillId != 0 {
-				skill := SkillFromNode(&res.S)
-				skill.Id = res.SkillId
-				skill.halify()
-				artistsById[res.ArtistId].hasSkill(skill)
+			if res.NodeId != 0 {
+				switch {
+				case res.RelType == "HAS_SKILL":
+					skill := SkillFromNode(&res.N)
+					skill.Id = res.NodeId
+					skill.halify()
+					artistsById[res.ArtistId].hasSkill(skill)
+				case res.RelType == "CLASSIFIED_IN":
+					style := StyleFromNode(&res.N)
+					style.Id = res.NodeId
+					style.halify()
+					artistsById[res.ArtistId].Styles = append(artistsById[res.ArtistId].Styles, style)
+				}
 			}
 		}
 	}

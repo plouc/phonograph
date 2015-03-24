@@ -20,9 +20,9 @@ style:
   indie_pop:  indie pop
   reggae:     reggae
   ska:        ska
+  rocksteady: rocksteady
   folk:       folk
   classic:    classic
-  rocksteady: rocksteady
   gypsy_jazz: gypsy jazz
   punk_rock:  punk rock
   new_wave:   new wave
@@ -60,7 +60,7 @@ artist:
   alton:
     name: Alton Elis
     skills: [vocals]
-    styles: [reggae]
+    styles: [reggae, rocksteady, ska]
   toots:
     name:   Toots and The Maytals
     styles: [reggae, ska]
