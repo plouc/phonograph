@@ -6,6 +6,8 @@ skill:
   drums:      drums
   organ:      organ
   percussion: percussion
+  keyboards:  keyboards
+  bass:       bass
 
 style:
   jazz:       jazz
@@ -15,12 +17,20 @@ style:
   hiphop:     hip hop
   alt_rock:   alternative rock
   indie_rock: indie rock
+  indie_pop:  indie pop
   reggae:     reggae
   ska:        ska
   folk:       folk
   classic:    classic
   rocksteady: rocksteady
   gypsy_jazz: gypsy jazz
+  punk_rock:  punk rock
+  new_wave:   new wave
+  post_punk:  post-punk
+  art_punk:   art punk
+  art_rock:   art rock
+  synthpop:   synthpop
+  elec_rock:  electronic rock
 
 label:
   verve:     The Verve
@@ -66,8 +76,31 @@ artist:
     name:   Bon Iver
     skills: [guitar, vocals]
     styles: [folk]
+  devo:
+    name:   Devo
+    styles: [punk_rock, new_wave, post_punk, art_punk, synthpop, elec_rock]
+  talking_heads:
+    name:   Talking Heads
+    styles: [punk_rock, new_wave, post_punk]
+  david_byrne:
+    name:   David Byrne
+    skills: [vocals, guitar]
+    groups: [talking_heads]
+  chris_frantz:
+    name:   Chris Frantz
+    skills: [drums]
+    groups: [talking_heads]
+  tina_weymouth:
+    name:   Tina Weymouth
+    skills: [bass]
+    groups: [talking_heads]
+  jerry_harrison:
+    name:   Jerry Harrison
+    skills: [guitar, keyboards]
+    groups: [talking_heads]
+    styles: [new_wave, indie_pop, rock, art_rock]
   beirut:
-    name: Beirut
+    name:   Beirut
   roots:
     name:   The Roots
     styles: [hiphop]
@@ -80,17 +113,17 @@ artist:
     skills: [piano, vocals]
     styles: [jazz]
   coleman:
-    name: Coleman Hawkins
+    name:   Coleman Hawkins
   hendrix:
-    name: Jimmy Hendrix
+    name:   Jimmy Hendrix
   doors:
-    name: The doors
+    name:   The doors
   love:
-    name: Love
+    name:   Love
   gainsbourg:
-    name: Serge Gainsbourg
+    name:   Serge Gainsbourg
   brel:
-    name: Jacques Brel
+    name:   Jacques Brel
   velvet:
     name:   Velvet Underground
     styles: [rock]
@@ -103,7 +136,7 @@ artist:
     skills: [vocals]
     styles: [indie_rock, alt_rock]
   joy_div:
-    name: Joy Division
+    name:   Joy Division
   joao:
     name:   Joao Gilberto
     skills: [guitar, vocals]
@@ -183,13 +216,7 @@ master:
       - { year: 1973, label: liberty,   country: US }
       - { year: 2013, label: blue_note, country: US }
       - { year: 1992, label: blue_note, country: Japan }
-
-      #A Night In Tunisia ‎(LP, Album, Mono)	Blue Note	BLP 4049	US	1960
-      #A Night In Tunisia ‎(LP, Album)	Liberty	LT-84049	US	1973
-      #A Night In Tunisia ‎(5xFile, AIFF, Album, RM, 24-)	Blue Note	none	US	2013
-      #A Night In Tunisia ‎(LP, Album, RE)	Blue Note, Blue Note, Blue Note	BN 4049, BST 84049, 84049	Japan	1992
-      #A Night In Tunisia ‎(LP, Album)	Blue Note	BST 84049	US	1960
-
+      - { year: 1960, label: blue_note, country: US }
   best_of_astrud:
     name:     The very best of Astrud Gilberto
     artists:  [astrud]
@@ -313,4 +340,66 @@ master:
       - { name: Children Of The Ghetto }
       - { name: In A Vision }
       - { name: Why Birds Follow Spring }
-
+  be_stiff:
+    name:    Be Stiff Maxi-45 tours (1977)
+    artists: [devo]
+  are_we_not_men:
+    name:    "Q: Are We Not Men? A: We Are Devo! (1978)"
+    artists: [devo]
+  duty_now_for:
+    name:    Duty Now for the Future (1979)
+    artists: [devo]
+  freedom_of_choice:
+    name:    Freedom of Choice (1980)
+    artists: [devo]
+  dev_o_live:
+    name:    Dev-o Live (1980) #(réédité dans une édition augmentée et limitée de (5000 copies) parRhino Handmade en octobre 1999)
+    artists: [devo]
+  new_traditionalists:
+    name:    New Traditionalists (1981)
+    artists: [devo]
+  oh_no_devo:
+    name:    Oh, No! It's Devo (1982)
+    artists: [devo]
+  shout:
+    name:    Shout (1984)
+    artists: [devo]
+  e_z_list:
+    name:    E-Z Listening Disc (1987)
+    artists: [devo]
+  total_devo:
+    name:    Total Devo (1988)
+    artists: [devo]
+  #DEVO discography
+  #Now It Can Be Told: DEVO at the Palace (1989)
+  #Smooth Noodle Maps (1990)
+  #DEVO Live: The Mongoloid Years (1992)
+  #Adventures of the Smart Patrol (1996)
+  #DEVO Live 1980 (2005) (Double CD)
+  #Something for Everybody (2010)
+  #New Traditionalists: Live 1981 Seattle (2013)
+  #Hardcore Live! (2015)
+  talk_heads_77:
+    name:    "Talking Heads: 77" # 1977
+    artists: [talking_heads]
+  more_songs_about_buildings_and_food:
+    name: More Songs About Buildings and Food # 1978
+    artists: [talking_heads]
+  fear_of_music:
+    name: Fear of Music # 1979
+    artists: [talking_heads]
+  remain_in_light:
+    name:    Remain in Light # 1980
+    artists: [talking_heads]
+  speaking_in_tongues:
+    name:    Speaking in Tongues # 1983
+    artists: [talking_heads]
+  little_creatures:
+    name:    Little Creatures # 1985
+    artists: [talking_heads]
+  true_stories:
+    name:    True Stories # 1986
+    artists: [talking_heads]
+  naked:
+    name:    Naked # 1988
+    artists: [talking_heads]

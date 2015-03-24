@@ -19,11 +19,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	labels := api.NewLabelsManager(db)
+	labels  := api.NewLabelsManager(db)
 	artists := api.NewArtistsManager(db)
 	masters := api.NewMastersManager(db)
 	//releases := api.NewReleasesManager(db)
-	//skills   := api.NewSkillsManager(db)
+	skills   := api.NewSkillsManager(db)
 	//styles   := api.NewStylesManager(db)
 
 	router := mux.NewRouter().StrictSlash(true)
@@ -108,6 +108,12 @@ func main() {
 		l := labels.Find()
 
 		api.JsonResponse(w, l)
+	})
+
+	router.HandleFunc("/skills", func(w http.ResponseWriter, r *http.Request) {
+		s := skills.Find()
+
+		api.JsonResponse(w, s)
 	})
 
 	router.HandleFunc("/labels/{labelId}", func(w http.ResponseWriter, r *http.Request) {

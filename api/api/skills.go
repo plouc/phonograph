@@ -25,7 +25,7 @@ func (s *Skill) halify() {
 	s.Links.Self = fmt.Sprintf("http://localhost:2000/skills/%d", s.Id)
 }
 
-type Skills []Skill
+type Skills []*Skill
 
 type SkillsManager struct {
 	db *neoism.Database
@@ -57,18 +57,31 @@ func (sm *SkillsManager) Create(skillName string) *Skill {
 }
 
 func (sm *SkillsManager) Find() Skills {
-	res := Skills{}
+	results := []struct {
+		S       neoism.Node
+		SkillId int
+	}{}
 
 	cq := neoism.CypherQuery{
 		Statement: `
-			MATCH (a:Artist)
-			RETURN a.name AS Name, a.skills AS Skills
-			ORDER BY a.name
+			MATCH (s:Skill)
+			RETURN s, id(s) AS skillId
+			ORDER BY s.name
 		`,
-		Result: &res,
+		Result: &results,
 	}
 
 	sm.db.Cypher(&cq)
 
-	return res
+	skills := Skills{}
+
+	for _, res := range results {
+		skill := SkillFromNode(&res.S)
+		skill.Id = res.SkillId
+		skill.halify()
+
+		skills = append(skills, skill)
+	}
+
+	return skills
 }
