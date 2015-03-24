@@ -5,15 +5,16 @@ var DefaultRoute = Router.DefaultRoute;
 var RouteHandler = Router.RouteHandler;
 var Link         = Router.Link;
 
-var Artists     = require('./components/Artists.jsx');
-var Artist      = require('./components/Artist.jsx');
-var Masters     = require('./components/Masters.jsx');
-var Master      = require('./components/Master.jsx');
-var Label       = require('./components/Label.jsx');
-var Styles      = require('./components/Styles.jsx');
-var MenuToggle  = require('./components/MenuToggle.jsx');
-var Menu        = require('./components/Menu.jsx');
-var MenuActions = require('./actions/MenuActions');
+var Artists      = require('./components/Artists.jsx');
+var ArtistCreate = require('./components/ArtistCreate.jsx');
+var Artist       = require('./components/Artist.jsx');
+var Masters      = require('./components/Masters.jsx');
+var Master       = require('./components/Master.jsx');
+var Label        = require('./components/Label.jsx');
+var Styles       = require('./components/Styles.jsx');
+var MenuToggle   = require('./components/MenuToggle.jsx');
+var Menu         = require('./components/Menu.jsx');
+var MenuActions  = require('./actions/MenuActions');
 
 var App = React.createClass({
     render: function () {
@@ -37,11 +38,13 @@ var App = React.createClass({
 var routes = (
     <Route handler={App}>
         <DefaultRoute name="index" handler={Artists}/>
-        <Route name="artist"  path="artists/:artist_id" handler={Artist}/>
-        <Route name="masters" path="masters" handler={Masters}/>
-        <Route name="master"  path="masters/:master_id" handler={Master}/>
-        <Route name="styles"  path="styles" handler={Styles}/>
-        <Route name="label"   path="labels/:label_id" handler={Label}/>
+
+        <Route name="artist_create" path="artists/new" handler={ArtistCreate}/>
+        <Route name="artist"        path="artists/:artist_id" handler={Artist}/>
+        <Route name="masters"       path="masters" handler={Masters}/>
+        <Route name="master"        path="masters/:master_id" handler={Master}/>
+        <Route name="styles"        path="styles" handler={Styles}/>
+        <Route name="label"         path="labels/:label_id" handler={Label}/>
     </Route>
 );
 

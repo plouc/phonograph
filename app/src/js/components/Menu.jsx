@@ -34,6 +34,7 @@ var Menu = React.createClass({
         return (
             <div className={classes}>
                 <Link className="menu__item" to="index">Artists</Link>
+                <Link className="menu__item" to="artist_create">New artist</Link>
                 <Link className="menu__item" to="masters">Masters</Link>
                 <Link className="menu__item" to="styles">Styles</Link>
             </div>

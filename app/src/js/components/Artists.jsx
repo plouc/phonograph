@@ -4,6 +4,9 @@ var ArtistsActions = require('./../actions/ArtistsActions');
 var ArtistsStore   = require('./../stores/ArtistsStore');
 var ArtistRow      = require('./ArtistRow.jsx');
 var Pager          = require('./Pager.jsx');
+var Router         = require('react-router');
+var Link           = Router.Link;
+
 
 var Artists = React.createClass({
     mixins: [
@@ -48,7 +51,12 @@ var Artists = React.createClass({
 
         return (
             <div>
-                <h2 className="page-title">Artists</h2>
+                <h2 className="page-title">
+                    Artists
+                    <Link to="artist_create" className="page-title__action">
+                        <i className="fa fa-plus"/>
+                    </Link>
+                </h2>
                 {pagerNode}
                 <table>
                     <tbody>

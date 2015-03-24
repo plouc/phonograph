@@ -11,7 +11,7 @@ var ArtistsStore = Reflux.createStore({
     list(params) {
         params = params || {};
 
-        var req = request.get('http://localhost:2000/artists')
+        var req = request.get('http://localhost:2000/artists');
         if (params.page) {
             req.query({ page: params.page });
         }
