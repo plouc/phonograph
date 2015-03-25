@@ -41,9 +41,9 @@ var Masters = React.createClass({
         if (this.state.masters.length > 0) {
             masterNodes = this.state.masters.map(master => {
                 return (
-                    <li>
+                    <div className="list__item">
                         <Link className="master" to="master" params={{ master_id: master.id }} key={master.id}>{master.name}</Link>
-                    </li>
+                    </div>
                 );
             });
         } else {
@@ -58,9 +58,9 @@ var Masters = React.createClass({
         return (
             <div>
                 <h2 className="page-title">Masters</h2>
-                <ul>
+                <div className="list">
                     {masterNodes}
-                </ul>
+                </div>
                 {pagerNode}
             </div>
         );

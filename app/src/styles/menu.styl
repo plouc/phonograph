@@ -1,0 +1,26 @@
+.menu
+  position fixed
+
+  top  0
+  left 0
+
+  width  220px
+  height 100%
+  background #f4ca78
+  transition opacity 200ms, transform 200ms
+  padding 100px 0 0 0
+
+  box-shadow 0 0 2px rgba(0, 0, 0, 0.35)
+  opacity 0
+  transform translateZ(0) translateX(-100%)
+
+  &._is-open
+    opacity 1
+    transform translateZ(0) translateX(0)
+
+  &__item
+    display block
+    font-weight 700
+    padding 9px 25px
+    &:hover
+      text-decoration underline

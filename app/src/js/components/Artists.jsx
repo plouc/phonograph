@@ -58,11 +58,9 @@ var Artists = React.createClass({
                     </Link>
                 </h2>
                 {pagerNode}
-                <table>
-                    <tbody>
-                        {artistNodes}
-                    </tbody>
-                </table>
+                <div className="artists__list">
+                    {artistNodes}
+                </div>
             </div>
         );
     }

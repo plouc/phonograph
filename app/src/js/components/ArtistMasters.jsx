@@ -32,21 +32,17 @@ var ArtistMasters = React.createClass({
         if (this.state.masters.length > 0) {
             var masterNodes = this.state.masters.map(master => {
                 return (
-                    <tr>
-                        <td>
-                            <Link key={master.id} to="master" params={{ master_id: master.id }} className="artist__master">
-                                {master.name}
-                            </Link>
-                        </td>
-                    </tr>
+                    <div className="list__item list__item--sm">
+                        <Link key={master.id} to="master" params={{ master_id: master.id }} className="artist__master">
+                            {master.name}
+                        </Link>
+                    </div>
                 );
             });
             contentNode = (
-                <table>
-                    <tbody>
-                        {masterNodes}
-                    </tbody>
-                </table>
+                <div className="list">
+                    {masterNodes}
+                </div>
             );
         } else {
             contentNode = <p>No item found.</p>

@@ -1,0 +1,21 @@
+.artists
+  &__list
+    @extend .list
+    &__item
+      @extend .list__item
+      &__name
+        display block
+        margin-bottom 3px
+        font-weight 700
+
+    &__styles,
+    &__skills
+      display inline-block
+      font-weight 300
+      font-size 15px
+      margin-left 9px
+      &:first-child
+        margin-left 0
+    &__style,
+    &__skill
+      font-weight 400

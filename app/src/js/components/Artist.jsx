@@ -3,6 +3,7 @@ var Reflux         = require('reflux');
 var Router         = require('react-router');
 var Link           = Router.Link;
 var ArtistSkills   = require('./ArtistSkills.jsx');
+var ArtistStyles   = require('./ArtistStyles.jsx');
 var ArtistGroups   = require('./ArtistGroups.jsx');
 var ArtistMasters  = require('./ArtistMasters.jsx');
 var SimilarArtists = require('./SimilarArtists.jsx');
@@ -56,6 +57,7 @@ var Artist = React.createClass({
                 <h2 className="page-title">{this.state.artist.name}</h2>
                 <div>
                     <ArtistSkills skills={this.state.artist.skills}/>
+                    <ArtistStyles styles={this.state.artist.styles}/>
                 </div>
                 {groupsNode}
                 <ArtistMasters artist={this.state.artist}/>
