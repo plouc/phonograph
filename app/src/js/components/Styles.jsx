@@ -6,18 +6,10 @@ var Styles = React.createClass({
         Reflux.ListenerMixin
     ],
 
-    componentWillMount() {
-
-    },
-
     render() {
         return (
             <div>
                 <h2 className="page-title">Styles</h2>
-                <table>
-                    <tbody>
-                    </tbody>
-                </table>
             </div>
         );
     }

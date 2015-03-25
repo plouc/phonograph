@@ -41,9 +41,10 @@ var Masters = React.createClass({
         if (this.state.masters.length > 0) {
             masterNodes = this.state.masters.map(master => {
                 return (
-                    <div className="list__item">
-                        <Link className="master" to="master" params={{ master_id: master.id }} key={master.id}>{master.name}</Link>
-                    </div>
+                    <Link className="list__item list__item--master" to="master" params={{ master_id: master.id }} key={master.id}>
+                        <span className="list__item__label">{master.name}</span>
+                        <span className="master__year">{master.year}</span>
+                    </Link>
                 );
             });
         } else {

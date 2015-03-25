@@ -1,53 +1,39 @@
-var React          = require('react');
-var Reflux         = require('reflux');
-var ArtistsActions = require('./../actions/ArtistsActions');
-var ArtistsStore   = require('./../stores/ArtistsStore');
-var ArtistRow      = require('./ArtistRow.jsx');
-var Pager          = require('./Pager.jsx');
-var Router         = require('react-router');
-var Link           = Router.Link;
-
+var React     = require('react');
+var ArtistRow = require('./ArtistRow.jsx');
+var Pager     = require('./Pager.jsx');
+var Router    = require('react-router');
+var Link      = Router.Link;
+var Api       = require('./../stores/Api');
 
 var Artists = React.createClass({
     mixins: [
-        Reflux.ListenerMixin
+        Router.State
     ],
 
-    getInitialState() {
-        return {
-            artists: [],
-            pager:   null
+    contextTypes: {
+        router: React.PropTypes.func
+    },
+
+    statics: {
+        fetchData(params, query) {
+            return Api.getArtists({
+                page: query.p || 1
+            });
         }
     },
 
-    componentWillMount() {
-        this.listenTo(ArtistsStore, this._onArtistsUpdate);
-
-        ArtistsActions.list();
-    },
-
-    _onArtistsUpdate(data) {
-        this.setState({
-            artists: data.results,
-            pager:   data.pager
-        });
-    },
-
     _onPageUpdate(page) {
-        ArtistsActions.list({
-            page: page
+        this.context.router.transitionTo('index', {}, {
+            p: page
         });
     },
 
     render() {
-        var artistNodes = this.state.artists.map(artist => {
+        var {results, pager} = this.props.data.index;
+
+        var artistNodes = results.map(artist => {
             return <ArtistRow artist={artist} key={artist.id} />
         });
-
-        var pagerNode = null;
-        if (this.state.pager) {
-            pagerNode = <Pager pager={this.state.pager} handler={this._onPageUpdate}/>
-        }
 
         return (
             <div>
@@ -57,7 +43,7 @@ var Artists = React.createClass({
                         <i className="fa fa-plus"/>
                     </Link>
                 </h2>
-                {pagerNode}
+                <Pager pager={pager} handler={this._onPageUpdate}/>
                 <div className="artists__list">
                     {artistNodes}
                 </div>

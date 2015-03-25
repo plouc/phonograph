@@ -1,42 +1,16 @@
-var React  = require('react');
-var Reflux = require('reflux');
-var Link   = require('react-router').Link;
-
-var MastersActions = require('./../actions/MastersActions');
-var MastersStore   = require('./../stores/MastersStore');
+var React = require('react');
+var Link  = require('react-router').Link;
 
 var ArtistMasters = React.createClass({
-    mixins: [
-        Reflux.ListenerMixin
-    ],
-
-    getInitialState() {
-        return {
-            masters: []
-        };
-    },
-
-    componentWillMount() {
-        MastersActions.playedBy(this.props.artist.id);
-        this.listenTo(MastersStore, this._onStoreUpdate);
-    },
-
-    _onStoreUpdate(masters) {
-        this.setState({
-            masters: masters
-        });
-    },
-
     render() {
         var contentNode;
-        if (this.state.masters.length > 0) {
-            var masterNodes = this.state.masters.map(master => {
+        if (this.props.masters.length > 0) {
+            var masterNodes = this.props.masters.map(master => {
                 return (
-                    <div className="list__item list__item--sm">
-                        <Link key={master.id} to="master" params={{ master_id: master.id }} className="artist__master">
-                            {master.name}
-                        </Link>
-                    </div>
+                    <Link key={master.id} to="master" params={{ master_id: master.id }} className="list__item">
+                        <span className="list__item__label">{master.name}</span>
+                        <span className="master__year">{master.year}</span>
+                    </Link>
                 );
             });
             contentNode = (

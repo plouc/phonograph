@@ -2,58 +2,35 @@ var React          = require('react');
 var Reflux         = require('reflux');
 var Router         = require('react-router');
 var Link           = Router.Link;
-var MastersActions = require('./../actions/MastersActions');
-var MastersStore   = require('./../stores/MastersStore');
 var ReleaseNodes   = require('./MasterReleases.jsx');
 var MasterTracks   = require('./MasterTracks.jsx');
+var Api            = require('./../stores/Api');
 
 var Master = React.createClass({
     mixins: [
-        Router.State,
-        Reflux.ListenerMixin
+        Router.State
     ],
 
-    getInitialState() {
-        return {
-            master: null
-        };
-    },
-
-    componentWillMount() {
-        this.listenTo(MastersStore, this._onStoreUpdate);
-
-        MastersActions.get(this.getParams().master_id);
-    },
-
-    _onStoreUpdate(master) {
-        this.setState({
-            master: master
-        });
+    statics: {
+        fetchData(params) {
+            return Api.getMaster(params.master_id);
+        }
     },
 
     render() {
-        var releaseNode = null;
-        var artistNode  = null;
-        var tracksNode  = null;
+        var {master} = this.props.data;
 
-        if (this.state.master !== null) {
-            releaseNode = <ReleaseNodes releases={this.state.master.releases}/>
-
-            var artistNodes = this.state.master.artists.map(artist => {
-                return (
-                    <Link ref={artist.id}
-                          to="artist"
-                          params={{ artist_id: artist.id }}
-                          className="master__artist"
-                    >
+        var artistNodes = master.artists.map(artist => {
+            return (
+                <Link ref={artist.id}
+                    to="artist"
+                    params={{ artist_id: artist.id }}
+                    className="master__artist"
+                >
                         {artist.name}
-                    </Link>
-                );
-            });
-
-            artistNode = <div className="master__artists">by {artistNodes}</div>;
-            tracksNode = <MasterTracks tracks={this.state.master.tracks}/>
-        }
+                </Link>
+            );
+        });
 
         return (
             <div>
@@ -62,10 +39,10 @@ var Master = React.createClass({
                         <i className="fa fa-angle-left"/> masters
                     </Link>
                 </div>
-                <h2 className="page-title">{this.state.master ? this.state.master.name : ''}</h2>
-                {artistNode}
-                {tracksNode}
-                {releaseNode}
+                <h2 className="page-title">{master.name}</h2>
+                <div className="master__artists">by {artistNodes} - {master.year}</div>
+                <MasterTracks tracks={master.tracks}/>
+                <ReleaseNodes releases={master.releases}/>
             </div>
         );
     }

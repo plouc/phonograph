@@ -10,8 +10,6 @@ var Pager = React.createClass({
         var prevNode = null;
         var nextNode = null;
 
-        console.log(this.props.pager);
-
         if (this.props.pager.page > 1) {
             prevNode = (
                 <span className="pager__prev" onClick={() => (this._onPageChange(this.props.pager.page - 1))}>

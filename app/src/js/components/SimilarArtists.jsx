@@ -1,39 +1,9 @@
-var React  = require('react');
-var Reflux = require('reflux');
-var Link   = require('react-router').Link;
-
-var ArtistsActions      = require('./../actions/ArtistsActions');
-var SimilarArtistsStore = require('./../stores/SimilarArtistsStore');
+var React = require('react');
+var Link  = require('react-router').Link;
 
 var SimilarArtists = React.createClass({
-    mixins: [
-        Reflux.ListenerMixin
-    ],
-
-    getInitialState() {
-        return {
-            artists: []
-        };
-    },
-
-    componentWillReceiveProps(props) {
-        ArtistsActions.similars(props.artist.id);
-    },
-
-    componentWillMount() {
-        ArtistsActions.similars(this.props.artist.id);
-        this.listenTo(SimilarArtistsStore, this._onStoreUpdate);
-    },
-
-    _onStoreUpdate(artists) {
-        this.setState({
-            artists: artists
-        });
-    },
-
     render() {
-        var artistNodes = this.state.artists.map(artist => {
-            console.log(artist.id);
+        var artistNodes = this.props.artists.map(artist => {
             return (
                 <Link key={artist.id} to="artist" params={{ artist_id: artist.id }} className="similar-artist">
                     {artist.name}

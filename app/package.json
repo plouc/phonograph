@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/plouc/vinyl-db",
   "dependencies": {
+    "bluebird": "^2.9.14",
     "browserify": "^9.0.3",
     "chalk": "^1.0.0",
     "font-awesome-stylus": "git+https://git@github.com/raulghm/Font-Awesome-Stylus.git",
@@ -25,11 +26,12 @@
     "gulp-stylus": "^2.0.1",
     "gulp-uglify": "^1.1.0",
     "gulp-util": "^3.0.4",
-    "react": "^0.12.2",
-    "react-router": "^0.12.4",
+    "react": "^0.13.1",
+    "react-router": "^0.13.2",
     "reactify": "^1.0.0",
     "reflux": "^0.2.6",
     "superagent": "^0.21.0",
+    "superagent-bluebird-promise": "^2.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^2.4.0"
