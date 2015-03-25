@@ -3,10 +3,26 @@
     @extend .list
     &__item
       @extend .list__item
+      min-height 56px
+      padding-left 66px
       &__name
         display block
         margin-bottom 3px
         font-weight 700
+
+      &__picture
+        width  56px
+        height 56px
+
+        position absolute
+
+        top  0
+        left 0
+
+        img
+          max-width  100%
+          max-height 100%
+
 
     &__styles,
     &__skills
@@ -19,3 +35,13 @@
     &__style,
     &__skill
       font-weight 400
+
+.artist__picture
+  width  120px
+  height 120px
+
+  overflow hidden
+
+  img
+    max-width  100%
+    max-height 100%

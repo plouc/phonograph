@@ -14,10 +14,11 @@ import (
 type Fixtures struct {
 	Year   []int
 	Artist map[string]struct {
-		Name   string
-		Skills []string
-		Styles []string
-		Groups []string
+		Name    string
+		Picture string
+		Skills  []string
+		Styles  []string
+		Groups  []string
 	}
 	Label  map[string]string
 	Skill  map[string]string
@@ -103,8 +104,8 @@ func main() {
 
 	fmt.Println("\nArtists:")
 	for k, a := range f.Artist {
-		fmt.Printf("> creating artist '%s'\n", a.Name)
-		refs.artists[k] = artists.Create(a.Name)
+		fmt.Printf("> creating artist '%s' (%s)\n", a.Name, a.Picture)
+		refs.artists[k] = artists.Create(a.Name, a.Picture)
 	}
 
 	fmt.Println("\nLabels:")

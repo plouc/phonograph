@@ -9,10 +9,11 @@ import (
 
 type Artist struct {
 	ApiNode
-	Name   string    `json:"name"`
-	Skills []*Skill  `json:"skills"`
-	Groups []*Artist `json:"groups"`
-	Styles []*Style  `json:"styles"`
+	Name    string    `json:"name"`
+	Picture string    `json:"picture"`
+	Skills  []*Skill  `json:"skills"`
+	Groups  []*Artist `json:"groups"`
+	Styles  []*Style  `json:"styles"`
 }
 
 type ArtistsCollection struct {
@@ -29,11 +30,13 @@ func (ac *ArtistsCollection) halify() {
 type Artists []*Artist
 
 func ArtistFromNode(node *neoism.Node) *Artist {
-	name := node.Data["name"].(string)
+	name    := node.Data["name"].(string)
+	picture := node.Data["picture"].(string)
 
 	return &Artist{
 		ApiNode: ApiNode{node: node},
 		Name:    name,
+		Picture: picture,
 		Skills:  []*Skill{},
 		Groups:  []*Artist{},
 		Styles:  []*Style{},
@@ -143,8 +146,11 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	return artist, nil
 }
 
-func (am *ArtistsManager) Create(artistName string) *Artist {
-	node, err := am.db.CreateNode(neoism.Props{"name": artistName})
+func (am *ArtistsManager) Create(artistName string, picture string) *Artist {
+	node, err := am.db.CreateNode(neoism.Props{
+		"name":    artistName,
+		"picture": picture,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -156,8 +162,9 @@ func (am *ArtistsManager) Create(artistName string) *Artist {
 			node: node,
 			Id:   node.Id(),
 		},
-		Name:   artistName,
-		Skills: []*Skill{},
+		Name:    artistName,
+		Picture: picture,
+		Skills:  []*Skill{},
 	}
 }
 

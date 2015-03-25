@@ -27,6 +27,15 @@ var Artist = React.createClass({
             groupsNode = <ArtistGroups groups={artist.groups}/>
         }
 
+        var img = null;
+        if (artist.picture !== '') {
+            img = (
+                <div className="artist__picture">
+                    <img src={`/images/${ artist.picture }`}/>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <div className="breadcrumbs">
@@ -34,6 +43,7 @@ var Artist = React.createClass({
                         <i className="fa fa-angle-left"/> artists
                     </Link>
                 </div>
+                {img}
                 <h2 className="page-title">{artist.name}</h2>
                 <div>
                     <ArtistSkills skills={artist.skills}/>

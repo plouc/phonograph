@@ -32,6 +32,21 @@ var Master = React.createClass({
             );
         });
 
+        var stylesNode = null;
+        if (master.styles.length > 0) {
+            var styleNodes = [];
+            master.styles.map((style, i) => {
+                styleNodes.push(<span>{style.name}</span>);
+                if (i <  master.styles.length - 1) {
+                    styleNodes.push(<span>,</span>);
+                    styleNodes.push(<span>&nbsp;</span>);
+                }
+            });
+
+            stylesNode = <div>{styleNodes}</div>;
+        }
+
+
         return (
             <div>
                 <div className="breadcrumbs">
@@ -41,6 +56,7 @@ var Master = React.createClass({
                 </div>
                 <h2 className="page-title">{master.name}</h2>
                 <div className="master__artists">by {artistNodes} - {master.year}</div>
+                {stylesNode}
                 <MasterTracks tracks={master.tracks}/>
                 <ReleaseNodes releases={master.releases}/>
             </div>
