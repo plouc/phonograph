@@ -161,7 +161,12 @@ func (am *ArtistsManager) Create(artistName string) *Artist {
 	}
 }
 
-func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
+type ArtistsFilters struct {
+	SkillId int
+	StyleId int
+}
+
+func (am *ArtistsManager) Find(pager *Pager, filters *ArtistsFilters) *ArtistsCollection {
 	results := []struct {
 		A        neoism.Node
 		ArtistId int
@@ -171,20 +176,36 @@ func (am *ArtistsManager) Find(pager *Pager) *ArtistsCollection {
 		Total    int
 	}{}
 
+	statement := `MATCH (a:Artist), (b:Artist)`
+	params    := neoism.Props{
+		"offset":  pager.Offset(),
+		"limit":   pager.PerPage,
+	}
+
+	if filters != nil {
+		if filters.SkillId != 0 {
+			statement = statement + `
+MATCH (s:Skill)<-[HAS_SKILL]-(a)
+MATCH (s:Skill)<-[HAS_SKILL]-(b)
+WHERE id(s) = {skillId}`
+			params["skillId"] = filters.SkillId
+		}
+	}
+
+	statement = statement + `
+WITH a, count(b) AS total
+ORDER BY a.name ASC
+SKIP {offset} LIMIT {limit}
+OPTIONAL MATCH (a)-[r:HAS_SKILL|CLASSIFIED_IN]->(n)
+RETURN a, id(a) AS artistId, type(r) AS relType, n, id(n) AS nodeId, total`
+
+	//fmt.Printf("%#v\n", filters)
+	//fmt.Printf("%s\n", statement)
+
 	cq := neoism.CypherQuery{
-		Statement: `
-			MATCH (a:Artist), (b:Artist)
-			WITH a, count(b) AS total
-			ORDER BY a.name ASC
-			SKIP {offset} LIMIT {limit}
-			OPTIONAL MATCH (a)-[r:HAS_SKILL|CLASSIFIED_IN]->(n)
-			RETURN a, id(a) AS artistId, type(r) AS relType, n, id(n) AS nodeId, total
-		`,
-		Parameters: neoism.Props{
-			"offset": pager.Offset(),
-			"limit":  pager.PerPage,
-		},
-		Result: &results,
+		Statement:  statement,
+		Parameters: params,
+		Result:     &results,
 	}
 
 	am.db.Cypher(&cq)

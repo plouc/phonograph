@@ -12,6 +12,7 @@ import (
 )
 
 type Fixtures struct {
+	Year   []int
 	Artist map[string]struct {
 		Name   string
 		Skills []string
@@ -23,6 +24,7 @@ type Fixtures struct {
 	Style  map[string]string
 	Master map[string]struct {
 		Name    string
+		Year    int
 		Artists []string
 		Styles  []string
 		Tracks  []struct {
@@ -38,6 +40,7 @@ type Fixtures struct {
 }
 
 type Refs struct {
+	years    map[int]*api.Year
 	artists  map[string]*api.Artist
 	labels   map[string]*api.Label
 	skills   map[string]*api.Skill
@@ -70,15 +73,17 @@ func main() {
 	}
 	db.Cypher(&cq)
 
-	labels := api.NewLabelsManager(db)
-	artists := api.NewArtistsManager(db)
-	masters := api.NewMastersManager(db)
-	tracks := api.NewTracksManager(db)
+	labels   := api.NewLabelsManager(db)
+	artists  := api.NewArtistsManager(db)
+	masters  := api.NewMastersManager(db)
+	tracks   := api.NewTracksManager(db)
 	releases := api.NewReleasesManager(db)
-	skills := api.NewSkillsManager(db)
-	styles := api.NewStylesManager(db)
+	skills   := api.NewSkillsManager(db)
+	styles   := api.NewStylesManager(db)
+	calendar := api.NewCalendarManager(db)
 
 	refs := Refs{
+		years:    make(map[int]*api.Year),
 		labels:   make(map[string]*api.Label),
 		artists:  make(map[string]*api.Artist),
 		masters:  make(map[string]*api.Master),
@@ -90,6 +95,12 @@ func main() {
 	//////////////////
 	// Create nodes //
 	//////////////////
+	fmt.Println("\nYears:")
+	for _, y := range f.Year {
+		fmt.Printf("> creating year '%d'\n", y)
+		refs.years[y] = calendar.CreateYear(y)
+	}
+
 	fmt.Println("\nArtists:")
 	for k, a := range f.Artist {
 		fmt.Printf("> creating artist '%s'\n", a.Name)
@@ -117,7 +128,9 @@ func main() {
 	fmt.Println("\nMasters:")
 	for k, m := range f.Master {
 		fmt.Printf("> creating master '%s'\n", m.Name)
-		master := masters.Create(m.Name)
+		master := masters.Create(m.Name, m.Year)
+		fmt.Printf("> add master '%s' to year '%d'\n", m.Name, m.Year)
+		refs.years[m.Year].AddMaster(master)
 		for _, t := range m.Tracks {
 			fmt.Printf("> adding track '%s' to '%s'\n", t.Name, m.Name)
 			track := tracks.Create(t.Name, t.Duration)

@@ -1,13 +1,29 @@
+year: [1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969,
+       1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979,
+       1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989,
+       1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+       2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+       2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
+
 skill:
-  vocals:     vocals
-  bass:       bass
-  piano:      piano
-  guitar:     guitar
-  drums:      drums
-  organ:      organ
-  percussion: percussion
-  keyboards:  keyboards
-  bass:       bass
+  vocals:      vocals
+  bass:        bass
+  piano:       piano
+  guitar:      guitar
+  drums:       drums
+  organ:       organ
+  percussion:  percussion
+  keyboards:   keyboards
+  bass:        bass
+  trumpet:     trumpet
+  violin:      violin
+  clarinet:    clarinet
+  harp:        harp
+  banjo:       banjo
+  djembe:      djembe
+  beatbox:     beatbox
+  flute:       flute
+  harpsichord: harpsichord
 
 style:
   jazz:       jazz
@@ -199,11 +215,17 @@ artist:
     name:   Lou Reed
     skills: [guitar, vocals]
     styles: [rock]
+    groups: [velvet]
+  grappelli:
+    name:   Stéphane Grappelli
+    skills: [violin, piano]
+    styles: [jazz]
 
 master:
   night_in:
     name:     Night in Tunisia
     artists:  [art_mess]
+    year:     1960
     styles:   [jazz]
     tracks:
       - { name: A Night In Tunisia }
@@ -220,6 +242,7 @@ master:
   best_of_astrud:
     name:     The very best of Astrud Gilberto
     artists:  [astrud]
+    year:     1971
     styles:   [jazz]
     tracks:
       - { name: The Girl From Ipanema }
@@ -240,20 +263,24 @@ master:
   money_jungle:
     name:     Money Jungle
     artists:  [duke, roach, mingus]
+    year:     1963
     styles:   [jazz]
     releases: []
   bleach:
     name:     Bleach
     artists:  [nirvana]
+    year:     1989
     styles:   [alt_rock, grunge]
   meat:
     name:     Meat is murder
     artists:  [smiths]
+    year:     1985
     styles:   [rock]
     releases: []
   chances:
     name:     Chances are
     artists:  [marley]
+    year:     1981
     styles:   [reggae]
     tracks:
       - { name: Reggae On Brodway,    duration: 320 }
@@ -273,38 +300,22 @@ master:
       - { year: 1981, label: wea,       country: Japan }
       - { year: 1981, label: wea,       country: Canada }
       - { year: 1981, label: wea,       country: Jamaica }
-#(LP, Comp)	WEA International	WEA 99183	Philippines	1981
-#(LP, Comp)	WEA	WEA 99 183	Scandinavia	1981
-#(LP, Comp)	WEA, WEA	WEA 99 183, WEA K 99 183	Netherlands	1981
-#(LP, Comp)	WEA	99183	Greece	1981
-#(LP, Comp)	Wea International, SUZY	WEA 99183	Yugoslavia	1981
-#(LP, Comp)	WEA	670.9331	Brazil	1981
-#(LP, Comp)	WEA	U 99183	Italy	1981
-#(LP, Comp)	WEA	WEA 99183	Portugal	1981
-#(LP, Comp)	WEA	K 99183	UK	1981
-#(LP, TP, Comp)	WEA	99183	Greece	1981
-#(LP, Comp)	WEA, Suzy	99183	Yugoslavia	1983
-#(LP, Album, RE)	WEA, WEA	LB 99138, 99138	Spain	1984
-#(Cass, Comp)	WEA, Cotillion	CS 5228 SR	US	1987
-#(CD, Comp)	WEA	18P2-2860	Japan	1989
-#(LP, Comp)	Gong	SLPXL 37266	Hungary	1989
-#(CD, Album, RE)	Atlantic, Wea International	5228-2	US	1990
-#(CD, Comp)	Warner Music France	2292-53066-2	France	Unknown
-#(CD, Comp)	WEA	2292-53066-2	Germany	Unknown
-#(LP, Comp, RE)	WEA, WEA	K 99 183, 99 183	Europe	Unknown	1
   ravin:
     name:     Du jazz dans le ravin
     artists:  [gainsbourg]
+    year:     1996
     styles:   [jazz]
     releases: []
   forever:
     name:     Forever changes
     artists:  [love]
+    year:     1967
     styles:   [rock, folk]
     releases: []
   soul_of_jam:
     name:     Mr Soul of Jamaica
     styles:   [rocksteady, reggae]
+    year:     1974
     artists:  [alton]
     tracks:
       - { name: Breaking Up }
@@ -321,16 +332,19 @@ master:
       - { name: What Does It Take }
   sings_rock:
     name:     Sings Rock and Soul
-    styles:   [rocksteady, reggae]
     artists:  [alton]
+    year:     1967
+    styles:   [rocksteady, reggae]
   showcase:
     name:     Showcase
-    styles:   [rocksteady, reggae]
     artists:  [alton]
+    year:     1984
+    styles:   [rocksteady, reggae]
   new_day:
     name:     A New Day
-    styles:   [rocksteady, reggae]
     artists:  [alton]
+    year:     1983
+    styles:   [rocksteady, reggae]
     tracks:
       - { name: Seven Days A Week }
       - { name: Stronger }
@@ -341,35 +355,45 @@ master:
       - { name: In A Vision }
       - { name: Why Birds Follow Spring }
   be_stiff:
-    name:    Be Stiff Maxi-45 tours (1977)
+    name:    Be Stiff Maxi-45 tours
     artists: [devo]
+    year:    1977
   are_we_not_men:
-    name:    "Q: Are We Not Men? A: We Are Devo! (1978)"
+    name:    "Q: Are We Not Men? A: We Are Devo!"
     artists: [devo]
+    year:    1978
   duty_now_for:
-    name:    Duty Now for the Future (1979)
+    name:    Duty Now for the Future
     artists: [devo]
+    year:    1979
   freedom_of_choice:
-    name:    Freedom of Choice (1980)
+    name:    Freedom of Choice
     artists: [devo]
+    year:    1980
   dev_o_live:
-    name:    Dev-o Live (1980) #(réédité dans une édition augmentée et limitée de (5000 copies) parRhino Handmade en octobre 1999)
+    name:    Dev-o Live #(réédité dans une édition augmentée et limitée de (5000 copies) parRhino Handmade en octobre 1999)
     artists: [devo]
+    year:    1980
   new_traditionalists:
-    name:    New Traditionalists (1981)
+    name:    New Traditionalists
     artists: [devo]
+    year:    1981
   oh_no_devo:
-    name:    Oh, No! It's Devo (1982)
+    name:    Oh, No! It's Devo
     artists: [devo]
+    year:    1982
   shout:
-    name:    Shout (1984)
+    name:    Shout
     artists: [devo]
+    year:    1984
   e_z_list:
-    name:    E-Z Listening Disc (1987)
+    name:    E-Z Listening Disc
     artists: [devo]
+    year:    1987
   total_devo:
-    name:    Total Devo (1988)
+    name:    Total Devo
     artists: [devo]
+    year:    1988
   #DEVO discography
   #Now It Can Be Told: DEVO at the Palace (1989)
   #Smooth Noodle Maps (1990)
@@ -380,26 +404,74 @@ master:
   #New Traditionalists: Live 1981 Seattle (2013)
   #Hardcore Live! (2015)
   talk_heads_77:
-    name:    "Talking Heads: 77" # 1977
+    name:    "Talking Heads: 77"
     artists: [talking_heads]
+    year:    1977
   more_songs_about_buildings_and_food:
-    name: More Songs About Buildings and Food # 1978
+    name:    More Songs About Buildings and Food
     artists: [talking_heads]
+    year:    1978
   fear_of_music:
-    name: Fear of Music # 1979
+    name:    Fear of Music
     artists: [talking_heads]
+    year:    1979
   remain_in_light:
-    name:    Remain in Light # 1980
+    name:    Remain in Light
     artists: [talking_heads]
+    year:    1980
   speaking_in_tongues:
-    name:    Speaking in Tongues # 1983
+    name:    Speaking in Tongues
     artists: [talking_heads]
+    year:    1983
   little_creatures:
-    name:    Little Creatures # 1985
+    name:    Little Creatures
     artists: [talking_heads]
+    year:    1985
   true_stories:
-    name:    True Stories # 1986
+    name:    True Stories
     artists: [talking_heads]
+    year:    1986
   naked:
-    name:    Naked # 1988
+    name:    Naked
     artists: [talking_heads]
+    year:    1988
+  #Scepter Studios Sessions  3 versions	Polydor
+  scepter_studios_sessions:
+    name:    Scepter Studios Sessions
+    artists: [velvet]
+    year:    2012
+  #Bootleg Series Volume 1: The Quine Tapes   4 versions	Polydor
+  bootleg_series_vol_1:
+    name:    "Bootleg Series Volume 1: The Quine Tapes"
+    artists: [velvet]
+    year:    2001
+  #White Light/White Heat   90 versions	Verve Records
+  white_light_white_heat:
+    name:    White Light/White Heat
+    artists: [velvet]
+    year:    1968
+  #Loaded   49 versions	Cotillion
+  loaded:
+    name:    Loaded
+    artists: [velvet]
+    year:    1970
+  #Live At Max's Kansas City   27 versions	Cotillion
+  live_at_max:
+    name:    Live At Max's Kansas City
+    artists: [velvet]
+    year:    1972
+  #Squeeze   7 versions	Polydor
+  squeeze:
+    name:    Squeeze
+    artists: [velvet]
+    year:    1972
+  # velvet underground
+  #Velvet Underground, The & Nico (3) - The Velvet Underground & Nico   161 versions	Verve Records, Verve Records		1967
+  #The Velvet Underground   63 versions	MGM Records		1969
+  #1969 Velvet Underground Live With Lou Reed   30 versions	Mercury		1974
+  #VU   36 versions	Verve Records		1984
+  #Another View   21 versions	Verve Records		1986
+  #1969 - Velvet Underground Live With Lou Reed - Volume 1   15 versions	Mercury		1979
+  #1969 - Velvet Underground Live With Lou Reed - Volume 2   12 versions	Mercury		1974
+  #Live MCMXCIII   15 versions	Sire, Warner Bros. Records		1993
+  #Final V.U. 1971▶1973 ‎(4xCD + Box)	Captain Trip Records	CTCD-350-353	2001

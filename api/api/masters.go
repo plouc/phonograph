@@ -10,6 +10,7 @@ type Master struct {
 	ApiNode
 
 	Name     string     `json:"name"`
+	Year     int        `json:"year"`
 	Releases []*Release `json:"releases"`
 	Artists  []*Artist  `json:"artists"`
 	Tracks   []*Track   `json:"tracks"`
@@ -34,10 +35,12 @@ type MastersManager struct {
 
 func MasterFromNode(node *neoism.Node) *Master {
 	name := node.Data["name"].(string)
+	year := int(node.Data["year"].(float64))
 
 	return &Master{
 		ApiNode:  ApiNode{node: node},
 		Name:     name,
+		Year:     year,
 		Releases: []*Release{},
 		Artists:  []*Artist{},
 		Tracks:   []*Track{},
@@ -72,8 +75,11 @@ func NewMastersManager(db *neoism.Database) *MastersManager {
 	}
 }
 
-func (mm *MastersManager) Create(masterName string) *Master {
-	node, err := mm.db.CreateNode(neoism.Props{"name": masterName})
+func (mm *MastersManager) Create(masterName string, year int) *Master {
+	node, err := mm.db.CreateNode(neoism.Props{
+		"name": masterName,
+		"year": year,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,6 +92,7 @@ func (mm *MastersManager) Create(masterName string) *Master {
 			Id:   node.Id(),
 		},
 		Name:     masterName,
+		Year:     year,
 		Releases: []*Release{},
 	}
 

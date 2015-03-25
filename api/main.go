@@ -32,7 +32,7 @@ func main() {
 	})
 
 	router.HandleFunc("/artists", func(w http.ResponseWriter, r *http.Request) {
-		a := artists.Find(api.NewPager(r.URL.Query()))
+		a := artists.Find(api.NewPager(r.URL.Query()), nil)
 
 		api.JsonResponse(w, a)
 	})
@@ -111,9 +111,36 @@ func main() {
 	})
 
 	router.HandleFunc("/skills", func(w http.ResponseWriter, r *http.Request) {
-		s := skills.Find()
+		s := skills.Find(api.NewPager(r.URL.Query()))
 
 		api.JsonResponse(w, s)
+	})
+
+	router.HandleFunc("/skills/{skillId}", func(w http.ResponseWriter, r *http.Request) {
+		skillId, err := strconv.Atoi(mux.Vars(r)["skillId"])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		skill, err := skills.FindById(skillId)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		api.JsonResponse(w, skill)
+	})
+
+	router.HandleFunc("/skills/{skillId}/artists", func(w http.ResponseWriter, r *http.Request) {
+			skillId, err := strconv.Atoi(mux.Vars(r)["skillId"])
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			a := artists.Find(api.NewPager(r.URL.Query()), &api.ArtistsFilters{
+				SkillId: skillId,
+			})
+
+			api.JsonResponse(w, a)
 	})
 
 	router.HandleFunc("/labels/{labelId}", func(w http.ResponseWriter, r *http.Request) {
