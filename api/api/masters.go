@@ -14,6 +14,7 @@ type Master struct {
 	Releases []*Release `json:"releases"`
 	Artists  []*Artist  `json:"artists"`
 	Tracks   []*Track   `json:"tracks"`
+	Styles   []*Style   `json:"styles"`
 }
 
 type Masters []*Master
@@ -44,6 +45,7 @@ func MasterFromNode(node *neoism.Node) *Master {
 		Releases: []*Release{},
 		Artists:  []*Artist{},
 		Tracks:   []*Track{},
+		Styles:   []*Style{},
 	}
 }
 
@@ -94,6 +96,9 @@ func (mm *MastersManager) Create(masterName string, year int) *Master {
 		Name:     masterName,
 		Year:     year,
 		Releases: []*Release{},
+		Artists:  []*Artist{},
+		Tracks:   []*Track{},
+		Styles:   []*Style{},
 	}
 
 	return master
@@ -150,7 +155,7 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 		Statement: `
 			MATCH (m:Master)
 			WHERE id(m) = {nodeId}
-			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN|HAS_TRACK]-(n)
+			OPTIONAL MATCH (m)-[r:HAS_RELEASE|PLAYED_IN|HAS_TRACK|CLASSIFIED_IN]-(n)
 			OPTIONAL MATCH (n:Release)-[BY_LABEL]->(l:Label)
 			RETURN m, type(r) AS relType, id(n) AS nodeId, n, id(l) AS labelId, l
 			ORDER BY type(r), n.name
@@ -205,6 +210,13 @@ func (mm *MastersManager) FindById(id int) (*Master, error) {
 				tra.Id = res.NodeId
 				tra.halify()
 				master.Tracks = append(master.Tracks, tra)
+			}
+			if res.RelType == "CLASSIFIED_IN" {
+				style := StyleFromNode(&res.N)
+				nodesById[res.NodeId] = style
+				style.Id = res.NodeId
+				style.halify()
+				master.Styles = append(master.Styles, style)
 			}
 		}
 	}
