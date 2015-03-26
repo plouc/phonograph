@@ -30,7 +30,7 @@ var Artist = React.createClass({
         var img = null;
         if (artist.picture !== '') {
             img = (
-                <div className="artist__picture">
+                <div className="artist__header__picture">
                     <img src={`/images/${ artist.picture }`}/>
                 </div>
             );
@@ -39,19 +39,27 @@ var Artist = React.createClass({
         return (
             <div>
                 <div className="breadcrumbs">
-                    <Link to="index">
-                        <i className="fa fa-angle-left"/> artists
-                    </Link>
+                    <div className="container">
+                        <Link to="index">
+                            <i className="fa fa-angle-left"/> artists
+                        </Link>
+                    </div>
                 </div>
-                {img}
-                <h2 className="page-title">{artist.name}</h2>
-                <div>
-                    <ArtistSkills skills={artist.skills}/>
-                    <ArtistStyles styles={artist.styles}/>
+                <div className="artist__header">
+                    <div className="artist__header__container">
+                        {img}
+                        <h2 className="page-title">{artist.name}</h2>
+                        <div className="cf">
+                            <ArtistSkills skills={artist.skills}/>
+                            <ArtistStyles styles={artist.styles}/>
+                        </div>
+                    </div>
                 </div>
-                {groupsNode}
-                <ArtistMasters masters={masters}/>
-                <SimilarArtists artists={similars}/>
+                <div className="container">
+                    {groupsNode}
+                    <ArtistMasters masters={masters}/>
+                    <SimilarArtists artists={similars}/>
+                </div>
             </div>
         )
     }

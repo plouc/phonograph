@@ -1,20 +1,18 @@
 var React     = require('react');
-var Reflux    = require('reflux');
 var Router    = require('react-router');
 var Link      = Router.Link;
 var Api       = require('./../stores/Api');
 var Pager     = require('./Pager.jsx');
 var ArtistRow = require('./ArtistRow.jsx');
 
-var Skill = React.createClass({
+var Style = React.createClass({
     mixins: [
-        Reflux.ListenerMixin,
         Router.State
     ],
 
     statics: {
         fetchData(params, query) {
-            return Api.getSkillFull(params.skill_id, {
+            return Api.getStyleFull(params.style_id, {
                 page: query.p || 1
             });
         }
@@ -22,16 +20,15 @@ var Skill = React.createClass({
 
     _onPageUpdate(page) {
         var {router} = this.context;
-        console.log('_onPageUpdate', router.getCurrentParams().skill_id, page);
-        router.transitionTo('skill', {
-            skill_id: router.getCurrentParams().skill_id
+        router.transitionTo('style', {
+            style_id: router.getCurrentParams().style_id
         }, {
             p: page
         });
     },
 
     render() {
-        var {skill, artists} = this.props.data.skill;
+        var {style, artists} = this.props.data.style;
 
         var artistNodes = artists.results.map(artist => {
             return <ArtistRow artist={artist} key={artist.id} />
@@ -41,13 +38,13 @@ var Skill = React.createClass({
             <div>
                 <div className="breadcrumbs">
                     <div className="container">
-                        <Link to="skills">
-                            <i className="fa fa-angle-left"/> skills
+                        <Link to="styles">
+                            <i className="fa fa-angle-left"/> styles
                         </Link>
                     </div>
                 </div>
                 <div className="container">
-                    <h2 className="page-title">{skill.name}</h2>
+                    <h2 className="page-title">{style.name}</h2>
                     <Pager pager={artists.pager} handler={this._onPageUpdate}/>
                     <div className="artists__list">
                         {artistNodes}
@@ -58,4 +55,4 @@ var Skill = React.createClass({
     }
 });
 
-module.exports = Skill;
+module.exports = Style;

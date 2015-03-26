@@ -46,19 +46,37 @@ var Master = React.createClass({
             stylesNode = <div>{styleNodes}</div>;
         }
 
+        var img = null;
+        if (master.picture !== '') {
+            img = (
+                <div className="master__header__picture">
+                    <img src={`/images/${ master.picture }`}/>
+                </div>
+            );
+        }
+
 
         return (
             <div>
                 <div className="breadcrumbs">
-                    <Link to="masters">
-                        <i className="fa fa-angle-left"/> masters
-                    </Link>
+                    <div className="container">
+                        <Link to="masters">
+                            <i className="fa fa-angle-left"/> masters
+                        </Link>
+                    </div>
                 </div>
-                <h2 className="page-title">{master.name}</h2>
-                <div className="master__artists">by {artistNodes} - {master.year}</div>
-                {stylesNode}
-                <MasterTracks tracks={master.tracks}/>
-                <ReleaseNodes releases={master.releases}/>
+                <div className="master__header">
+                    <div className="master__header__container">
+                        {img}
+                        <h2 className="page-title">{master.name}</h2>
+                        <div className="master__artists">by {artistNodes} - {master.year}</div>
+                        {stylesNode}
+                    </div>
+                </div>
+                <div className="container">
+                    <MasterTracks tracks={master.tracks}/>
+                    <ReleaseNodes releases={master.releases}/>
+                </div>
             </div>
         );
     }

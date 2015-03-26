@@ -36,7 +36,7 @@ var Artists = React.createClass({
         });
 
         return (
-            <div>
+            <div className="container">
                 <h2 className="page-title">
                     Artists
                     <Link to="artist_create" className="page-title__action">

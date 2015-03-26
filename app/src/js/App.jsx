@@ -12,6 +12,7 @@ var Masters      = require('./components/Masters.jsx');
 var Master       = require('./components/Master.jsx');
 var Label        = require('./components/Label.jsx');
 var Styles       = require('./components/Styles.jsx');
+var Style        = require('./components/Style.jsx');
 var Skills       = require('./components/Skills.jsx');
 var Skill        = require('./components/Skill.jsx');
 var MenuToggle   = require('./components/MenuToggle.jsx');
@@ -28,11 +29,7 @@ var App = React.createClass({
                     <MenuToggle/>
                 </div>
                 <Menu />
-                <div>
-                    <div className="container">
-                        <RouteHandler {...this.props}/>
-                    </div>
-                </div>
+                <RouteHandler {...this.props}/>
             </div>
         );
     }
@@ -47,6 +44,7 @@ var routes = (
         <Route name="masters"       path="masters"            handler={Masters}/>
         <Route name="master"        path="masters/:master_id" handler={Master}/>
         <Route name="styles"        path="styles"             handler={Styles}/>
+        <Route name="style"         path="styles/:style_id"   handler={Style}/>
         <Route name="skills"        path="skills"             handler={Skills}/>
         <Route name="skill"         path="skills/:skill_id"   handler={Skill}/>
         <Route name="label"         path="labels/:label_id"   handler={Label}/>

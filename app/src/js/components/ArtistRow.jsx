@@ -19,8 +19,8 @@ var ArtisRow = React.createClass({
                 {imgNode}
                 <Link className="artists__list__item__name" to="artist" params={{ artist_id: this.props.artist.id }}>{this.props.artist.name}</Link>
                 <span>
-                    <ArtistSkills skills={this.props.artist.skills}/>
-                    <ArtistStyles styles={this.props.artist.styles}/>
+                    <ArtistSkills skills={this.props.artist.skills} mode="list"/>
+                    <ArtistStyles styles={this.props.artist.styles} mode="list"/>
                 </span>
             </div>
         );

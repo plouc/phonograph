@@ -12,6 +12,8 @@ var Api = {
             req.query({ page: params.page });
         }
 
+        req.query({ per_page: 20 });
+
         return req.then(res => res.body);
     },
 
@@ -80,7 +82,44 @@ var Api = {
         var req = request.get(`${ API_URL }/masters/${ id }`);
 
         return req.then(res => res.body);
-    }
+    },
+
+    getStyles(params) {
+        params = params || {};
+        var req = request.get(`${ API_URL }/styles`);
+
+        if (params.page) {
+            req.query({ page: params.page });
+        }
+
+        req.query({ per_page: 20 });
+
+        return req.then(res => res.body);
+    },
+
+    getStyle(id) {
+        var req = request.get(`${ API_URL }/styles/${ id }`);
+
+        return req.then(res => res.body);
+    },
+
+    getStyleArtists(id, params) {
+        params = params || {};
+        var req = request.get(`${ API_URL }/styles/${ id }/artists`);
+
+        if (params.page) {
+            req.query({ page: params.page });
+        }
+
+        return req.then(res => res.body);
+    },
+
+    getStyleFull(id, params) {
+        return Promise.props({
+            style:   Api.getStyle(id),
+            artists: Api.getStyleArtists(id, params)
+        });
+    },
 };
 
 module.exports = Api;

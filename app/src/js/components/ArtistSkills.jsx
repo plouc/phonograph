@@ -17,9 +17,15 @@ var ArtistSkills = React.createClass({
             }
         });
 
+        var classes = 'artist__skills';
+        if (this.props.mode === 'list') {
+            classes += ' artist__skills--list';
+        }
+
         return (
-            <div className="artists__list__skills">
-                skills: {skillNodes}
+            <div className={classes}>
+                <span className="artist__skills__title">skills</span>
+                {skillNodes}
             </div>
         );
     }

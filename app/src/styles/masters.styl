@@ -1,10 +1,11 @@
-.artists
+.masters
   &__list
     @extend .list
     &__item
       @extend .list__item
       min-height 56px
       padding-left 66px
+
       &__name
         display block
         margin-bottom 3px
@@ -13,8 +14,6 @@
       &__picture
         width  56px
         height 56px
-
-        background #000
 
         position absolute
 
@@ -25,34 +24,7 @@
           max-width  100%
           max-height 100%
 
-
-.artist
-  &__styles,
-  &__skills
-    float left
-    width 50%
-    font-size 16px
-
-    &--list
-      float none
-      width auto
-
-    &__title
-      display block
-      text-transform uppercase
-      font-weight 700
-      font-size 12px
-      margin-bottom 5px
-
-    &--list
-      .artist__skills,
-      .artist__styles
-        &__title
-          display inline-block
-          margin-right 9px
-
-
-.artist__header
+.master__header
   background darken(#f4ca78, 10%)
   &__container
     position relative

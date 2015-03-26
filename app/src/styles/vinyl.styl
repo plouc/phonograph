@@ -15,8 +15,16 @@ body
   margin 0
   padding-top 100px
 
+.cf
+  &:before, &:after
+    content: " "
+    display: table
+
+  &:after
+    clear both
+
 .container
-  width 500px
+  width 900px
   margin-right auto
   margin-left  auto
 
@@ -99,7 +107,8 @@ a
 
 .breadcrumbs
   font-size 14px
-  margin-bottom 10px
+  background #f4ca78
+  padding 9px 0
 
 .pager
   margin 15px 0
@@ -138,6 +147,10 @@ a
     border-radius 50%
     background #000
     color #f4ca78
+
+  &__total
+    margin-left 20px
+    display inline-block
 
 .skill
   display inline-block
@@ -222,4 +235,5 @@ a
 
 @require "lists.styl"
 @require "artists.styl"
+@require "masters.styl"
 @require "menu.styl"

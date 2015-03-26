@@ -44,7 +44,7 @@ var Skills = React.createClass({
         }
 
         return (
-            <div>
+            <div className="container">
                 <h2 className="page-title">Skills</h2>
                 <Pager pager={pager} handler={this._onPageUpdate}/>
                 <div className="list">

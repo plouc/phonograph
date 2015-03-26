@@ -3,6 +3,7 @@ var Reflux         = require('reflux');
 var Link           = require('react-router').Link;
 var MastersActions = require('./../actions/MastersActions');
 var MastersStore   = require('./../stores/MastersStore');
+var MasterRow      = require('./MasterRow.jsx');
 var Pager          = require('./Pager.jsx');
 
 var Masters = React.createClass({
@@ -40,13 +41,8 @@ var Masters = React.createClass({
         var masterNodes;
         if (this.state.masters.length > 0) {
             masterNodes = this.state.masters.map(master => {
-                return (
-                    <Link className="list__item list__item--master" to="master" params={{ master_id: master.id }} key={master.id}>
-                        <span className="list__item__label">{master.name}</span>
-                        <span className="master__year">{master.year}</span>
-                    </Link>
-                );
-            });
+                return <MasterRow key={master.id} master={master}/>;
+            })
         } else {
             masterNodes = <li>No item found</li>
         }
@@ -57,7 +53,7 @@ var Masters = React.createClass({
         }
 
         return (
-            <div>
+            <div className="container">
                 <h2 className="page-title">Masters</h2>
                 <div className="list">
                     {masterNodes}

@@ -35,6 +35,7 @@ var Pager = React.createClass({
                     <span className="pager__page-progress__current">{this.props.pager.page}</span>
                     <span className="pager__page-progress__sep">/</span>
                     <span className="pager__page-progress__total">{this.props.pager.page_count}</span>
+                    <span className="pager__total">[{this.props.pager.total}]</span>
                 </span>
                 {nextNode}
             </div>

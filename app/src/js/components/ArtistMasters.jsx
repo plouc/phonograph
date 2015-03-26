@@ -1,17 +1,13 @@
-var React = require('react');
-var Link  = require('react-router').Link;
+var React     = require('react');
+var Link      = require('react-router').Link;
+var MasterRow = require('./MasterRow.jsx');
 
 var ArtistMasters = React.createClass({
     render() {
         var contentNode;
         if (this.props.masters.length > 0) {
             var masterNodes = this.props.masters.map(master => {
-                return (
-                    <Link key={master.id} to="master" params={{ master_id: master.id }} className="list__item">
-                        <span className="list__item__label">{master.name}</span>
-                        <span className="master__year">{master.year}</span>
-                    </Link>
-                );
+                return <MasterRow key={master.id} master={master}/>;
             });
             contentNode = (
                 <div className="list">
