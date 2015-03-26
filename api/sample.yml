@@ -7,50 +7,64 @@ year: [1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969,
 
 skill:
   vocals:      vocals
-  bass:        bass
+  beatbox:     beatbox
   piano:       piano
-  guitar:      guitar
-  drums:       drums
   organ:       organ
-  percussion:  percussion
-  keyboards:   keyboards
+  guitar:      guitar
   bass:        bass
-  trumpet:     trumpet
   violin:      violin
-  clarinet:    clarinet
   harp:        harp
   banjo:       banjo
+  drums:       drums
+  percussion:  percussion
   djembe:      djembe
-  beatbox:     beatbox
+  keyboards:   keyboards
   flute:       flute
   harpsichord: harpsichord
+  trumpet:     trumpet
+  saxo:        saxophone
+  clarinet:    clarinet
+  turntables:  turntables
 
 style:
-  jazz:       jazz
-  grunge:     grunge
-  country:    country
-  rock:       rock
-  hiphop:     hip hop
-  alt_rock:   alternative rock
-  indie_rock: indie rock
-  indie_pop:  indie pop
-  reggae:     reggae
-  ska:        ska
-  rocksteady: rocksteady
-  folk:       folk
-  classic:    classic
-  gypsy_jazz: gypsy jazz
-  punk_rock:  punk rock
-  new_wave:   new wave
-  post_punk:  post-punk
-  art_punk:   art punk
-  art_rock:   art rock
-  synthpop:   synthpop
-  elec_rock:  electronic rock
-  psy_rock:   psychedelic rock
-  hard_rock:  hard rock
-  blues:      blues
-  r_n_b:      rhythm and blues
+  jazz:          jazz
+  grunge:        grunge
+  country:       country
+  rock:          rock
+  hiphop:        hip hop
+  alt_rock:      alternative rock
+  indie_rock:    indie rock
+  indie_pop:     indie pop
+  reggae:        reggae
+  ska:           ska
+  rocksteady:    rocksteady
+  folk:          folk
+  classic:       classic
+  gypsy_jazz:    gypsy jazz
+  punk_rock:     punk rock
+  new_wave:      new wave
+  post_punk:     post-punk
+  art_punk:      art punk
+  art_rock:      art rock
+  synthpop:      synthpop
+  elec_rock:     electronic rock
+  psy_rock:      psychedelic rock
+  hard_rock:     hard rock
+  blues:         blues
+  r_n_b:         rhythm and blues
+  dixie:         dixieland
+  swing:         swing
+  stride:        stride
+  ragtime:       ragtime
+  rap_rock:      rap rock
+  hardcore_punk: hardcore punk
+  rapcore:       rapcore
+  neo_soul:      neo soul
+  jazz_rap:      jazz rap
+  balkan_folk:   balkan folk
+  indie_folk:    indie folk
+  electronica:   electronica
+  baroque_pop:   baroque pop
 
 label:
   verve:     The Verve
@@ -69,10 +83,11 @@ label:
 
 artist:
   kurt:
-    name:   Kurt Cobain
-    groups: [nirvana]
-    skills: [guitar, vocals]
-    styles: [grunge, alt_rock]
+    name:    Kurt Cobain
+    groups:  [nirvana]
+    skills:  [guitar, vocals]
+    styles:  [grunge, alt_rock]
+    picture: kurt_cobain.jpg
   wes:
     name:   Wes Montgomery
     skills: [guitar]
@@ -83,17 +98,23 @@ artist:
     skills:  [vocals]
     styles:  [reggae, rocksteady, ska]
   toots:
-    name:   Toots and The Maytals
-    styles: [reggae, ska]
+    name:    Toots and The Maytals
+    styles:  [reggae, ska]
+    picture: toots_and_maytals.jpg
   nina:
-    name:   Nina Simone
-    skills: [vocals]
-    styles: [jazz]
+    name:    Nina Simone
+    skills:  [vocals]
+    styles:  [jazz]
+    picture: nina_simone.jpg
+  beastie_boys:
+    name:    Beastie Boys
+    styles:  [hiphop, rap_rock, hardcore_punk, rapcore]
+    picture: beastie_boys.jpg
   nat:
     name:    Nat King Cole
     picture: nat_king_cole.jpg
     skills:  [piano, vocals]
-    styles:  [jazz]
+    styles:  [jazz, swing]
   bon:
     name:    Bon Iver
     picture: bon_iver.jpg
@@ -123,30 +144,48 @@ artist:
     groups: [talking_heads]
     styles: [new_wave, indie_pop, rock, art_rock]
   beirut:
-    name:   Beirut
-  roots:
-    name:   The Roots
-    styles: [hiphop]
+    name:    Beirut
+    styles:  [balkan_folk, indie_folk, electronica, baroque_pop]
+    picture: beirut.jpg
+  questlove:
+    name:    Questlove
+    skills:  [drums, turntables]
+    styles:  [hiphop, neo_soul]
+    groups:  [the_roots]
+    picture: questlove.jpg
+  the_roots:
+    name:    The Roots
+    styles:  [hiphop, neo_soul, jazz_rap]
+    picture: the_roots.jpg
   fats:
-    name:   Fats Waller
-    skills: [piano, vocals]
-    styles: [jazz]
+    name:    Fats Waller
+    skills:  [piano, vocals]
+    styles:  [jazz, dixie, swing, stride, ragtime]
+    picture: fats_waller.jpg
   louis:
-    name:   Louis Jordan
-    skills: [piano, vocals]
-    styles: [jazz]
+    name:    Louis Jordan
+    skills:  [piano, vocals]
+    styles:  [jazz]
+    picture: louis_jordan.jpg
   coleman:
-    name:   Coleman Hawkins
+    name:    Coleman Hawkins
+    picture: coleman_hawkins.jpg
+    skills:  [saxo]
+    styles:  [jazz]
   hendrix:
-    name:   Jimmy Hendrix
-    skills: [guitar, vocals]
-    styles: [psy_rock, hard_rock, blues, r_n_b]
+    name:    Jimmy Hendrix
+    skills:  [guitar, vocals]
+    styles:  [psy_rock, hard_rock, blues, r_n_b]
+    picture: jimmy_hendrix.jpg
   doors:
     name:   The doors
   love:
     name:   Love
   gainsbourg:
-    name:   Serge Gainsbourg
+    name:    Serge Gainsbourg
+    picture: serge_gainsbourg.jpg
+    skills:  [piano, vocals]
+    styles:  [jazz]
   brel:
     name:   Jacques Brel
   velvet:
@@ -163,10 +202,12 @@ artist:
     styles:  [indie_rock, alt_rock]
   joy_div:
     name:    Joy Division
+    picture: joy_division.jpg
   joao:
     name:    Joao Gilberto
     skills:  [guitar, vocals]
     styles:  [jazz]
+    picture: joao_gilberto.jpg
   astrud:
     name:    Astrud Gilberto
     picture: astrud_gilberto.jpg
@@ -188,6 +229,7 @@ artist:
     name:    Bob Marley
     skills:  [vocals, guitar]
     styles:  [reggae, rocksteady, ska]
+    picture: bob_marley.jpg
   art:
     name:    Art Blakey
     picture: art_blakey.jpg
@@ -204,6 +246,7 @@ artist:
   mingus:
     name:    Charlie Mingus
     styles:  [jazz]
+    picture: charlie_mingus.jpg
   duke:
     name:    Duke Ellington
     picture: duke_ellington.jpg
@@ -231,6 +274,7 @@ artist:
     skills:  [guitar, vocals]
     styles:  [rock]
     groups:  [velvet]
+    picture: lou_reed.jpg
   grappelli:
     name:    Stéphane Grappelli
     picture: stephane_grappelli.jpg
@@ -242,6 +286,7 @@ master:
     name:     Night in Tunisia
     artists:  [art_mess]
     year:     1960
+    picture:  night_in_tunisia.jpg
     styles:   [jazz]
     tracks:
       - { name: A Night In Tunisia }
@@ -280,17 +325,20 @@ master:
     name:     Money Jungle
     artists:  [duke, roach, mingus]
     year:     1963
+    picture:  money_jungle.jpg
     styles:   [jazz]
     releases: []
   bleach:
     name:     Bleach
     artists:  [nirvana]
     year:     1989
+    picture:  bleach.jpg
     styles:   [alt_rock, grunge]
   meat:
     name:     Meat is murder
     artists:  [smiths]
     year:     1985
+    picture:  meat_is_murder.jpg
     styles:   [rock]
     releases: []
   chances:
@@ -320,6 +368,7 @@ master:
     name:     Du jazz dans le ravin
     artists:  [gainsbourg]
     year:     1996
+    picture:  du_jazz_dans_le_ravin.jpg
     styles:   [jazz]
     releases: []
   forever:
@@ -332,6 +381,7 @@ master:
     name:     Mr Soul of Jamaica
     styles:   [rocksteady, reggae]
     year:     1974
+    picture:  mr_soul_of_jamaica.jpg
     artists:  [alton]
     tracks:
       - { name: Breaking Up }

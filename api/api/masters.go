@@ -11,6 +11,7 @@ type Master struct {
 
 	Name     string     `json:"name"`
 	Year     int        `json:"year"`
+	Picture  string     `json:"picture"`
 	Releases []*Release `json:"releases"`
 	Artists  []*Artist  `json:"artists"`
 	Tracks   []*Track   `json:"tracks"`
@@ -35,13 +36,15 @@ type MastersManager struct {
 }
 
 func MasterFromNode(node *neoism.Node) *Master {
-	name := node.Data["name"].(string)
-	year := int(node.Data["year"].(float64))
+	name    := node.Data["name"].(string)
+	year    := int(node.Data["year"].(float64))
+	picture := node.Data["picture"].(string)
 
 	return &Master{
 		ApiNode:  ApiNode{node: node},
 		Name:     name,
 		Year:     year,
+		Picture:  picture,
 		Releases: []*Release{},
 		Artists:  []*Artist{},
 		Tracks:   []*Track{},
@@ -77,10 +80,11 @@ func NewMastersManager(db *neoism.Database) *MastersManager {
 	}
 }
 
-func (mm *MastersManager) Create(masterName string, year int) *Master {
+func (mm *MastersManager) Create(masterName string, year int, picture string) *Master {
 	node, err := mm.db.CreateNode(neoism.Props{
-		"name": masterName,
-		"year": year,
+		"name":    masterName,
+		"year":    year,
+		"picture": picture,
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -95,6 +99,7 @@ func (mm *MastersManager) Create(masterName string, year int) *Master {
 		},
 		Name:     masterName,
 		Year:     year,
+		Picture:  picture,
 		Releases: []*Release{},
 		Artists:  []*Artist{},
 		Tracks:   []*Track{},

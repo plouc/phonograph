@@ -26,6 +26,7 @@ type Fixtures struct {
 	Master map[string]struct {
 		Name    string
 		Year    int
+		Picture string
 		Artists []string
 		Styles  []string
 		Tracks  []struct {
@@ -129,7 +130,7 @@ func main() {
 	fmt.Println("\nMasters:")
 	for k, m := range f.Master {
 		fmt.Printf("> creating master '%s'\n", m.Name)
-		master := masters.Create(m.Name, m.Year)
+		master := masters.Create(m.Name, m.Year, m.Picture)
 		fmt.Printf("> add master '%s' to year '%d'\n", m.Name, m.Year)
 		refs.years[m.Year].AddMaster(master)
 		for _, t := range m.Tracks {

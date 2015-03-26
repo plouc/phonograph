@@ -24,7 +24,7 @@ func main() {
 	masters := api.NewMastersManager(db)
 	//releases := api.NewReleasesManager(db)
 	skills   := api.NewSkillsManager(db)
-	//styles   := api.NewStylesManager(db)
+	styles   := api.NewStylesManager(db)
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -155,6 +155,39 @@ func main() {
 		}
 
 		api.JsonResponse(w, label)
+	})
+
+	router.HandleFunc("/styles", func(w http.ResponseWriter, r *http.Request) {
+		s := styles.Find(api.NewPager(r.URL.Query()))
+
+		api.JsonResponse(w, s)
+	})
+
+	router.HandleFunc("/styles/{styleId}", func(w http.ResponseWriter, r *http.Request) {
+		styleId, err := strconv.Atoi(mux.Vars(r)["styleId"])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		style, err := styles.FindById(styleId)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		api.JsonResponse(w, style)
+	})
+
+	router.HandleFunc("/styles/{styleId}/artists", func(w http.ResponseWriter, r *http.Request) {
+		styleId, err := strconv.Atoi(mux.Vars(r)["styleId"])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		a := artists.Find(api.NewPager(r.URL.Query()), &api.ArtistsFilters{
+			StyleId: styleId,
+		})
+
+		api.JsonResponse(w, a)
 	})
 
 	handler := cors.Default().Handler(router)

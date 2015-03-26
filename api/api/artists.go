@@ -192,10 +192,17 @@ func (am *ArtistsManager) Find(pager *Pager, filters *ArtistsFilters) *ArtistsCo
 	if filters != nil {
 		if filters.SkillId != 0 {
 			statement = statement + `
-MATCH (s:Skill)<-[HAS_SKILL]-(a)
-MATCH (s:Skill)<-[HAS_SKILL]-(b)
-WHERE id(s) = {skillId}`
+MATCH (sk:Skill)<-[HAS_SKILL]-(a)
+MATCH (sk:Skill)<-[HAS_SKILL]-(b)
+WHERE id(sk) = {skillId}`
 			params["skillId"] = filters.SkillId
+		}
+		if filters.StyleId != 0 {
+			statement = statement + `
+MATCH (st:Style)<-[CLASSIFIED_IN]-(a)
+MATCH (st:Style)<-[CLASSIFIED_IN]-(b)
+WHERE id(st) = {styleId}`
+			params["styleId"] = filters.StyleId
 		}
 	}
 
@@ -260,6 +267,7 @@ RETURN a, id(a) AS artistId, type(r) AS relType, n, id(n) AS nodeId, total`
 	return &collection
 }
 
+// Find similar artists matching on skills and styles
 func (am *ArtistsManager) Similars(a *Artist) Artists {
 	results := []struct {
 		B        neoism.Node
@@ -268,12 +276,12 @@ func (am *ArtistsManager) Similars(a *Artist) Artists {
 
 	cq := neoism.CypherQuery{
 		Statement: `
-			MATCH (a:Artist)
-			WHERE id(a) = {artistId}
-			MATCH (a)-[c0:CLASSIFIED_IN]->(s:Style)<-[c1:CLASSIFIED_IN]-(b:Artist)
-			RETURN b, id(b) AS artistId
-			ORDER BY b.name
-		`,
+MATCH (a:Artist)
+WHERE id(a) = {artistId}
+MATCH (a)-[:CLASSIFIED_IN|HAS_SKILL]->(s)<-[:CLASSIFIED_IN|HAS_SKILL]-(b:Artist)
+RETURN b, id(b) AS artistId, count(s) AS score
+ORDER BY score DESC
+SKIP 0 LIMIT 10`,
 		Parameters: neoism.Props{"artistId": a.Id},
 		Result:     &results,
 	}
