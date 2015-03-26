@@ -1,5 +1,28 @@
 # phonograph
 
+## Installation
+
+### Requirements
+
+* neo4j
+* go
+* nodejs/npm
+* gulp
+
+#### Load sample data
+
+```sh
+cd api
+go run data.go
+```
+
+#### Build assets
+
+```sh
+cd app
+gulp
+```
+
 ## API
 
 ```
