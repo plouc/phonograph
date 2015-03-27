@@ -14,6 +14,7 @@ type Artist struct {
 	Skills  []*Skill  `json:"skills"`
 	Groups  []*Artist `json:"groups"`
 	Styles  []*Style  `json:"styles"`
+	Members []*Artist `json:"members"`
 }
 
 type ArtistsCollection struct {
@@ -40,6 +41,7 @@ func ArtistFromNode(node *neoism.Node) *Artist {
 		Skills:  []*Skill{},
 		Groups:  []*Artist{},
 		Styles:  []*Style{},
+		Members: []*Artist{},
 	}
 }
 
@@ -89,20 +91,20 @@ func NewArtistsManager(db *neoism.Database) *ArtistsManager {
 
 func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 	results := []struct {
-		A       neoism.Node
-		RelType string
-		NodeId  int
-		N       neoism.Node
+		A           neoism.Node
+		RelType     string
+		StartNodeId int
+		NodeId      int
+		N           neoism.Node
 	}{}
 
 	cq := neoism.CypherQuery{
 		Statement: `
-			MATCH (a:Artist)
-			WHERE id(a) = {nodeId}
-			OPTIONAL MATCH (a)-[r:HAS_SKILL|MEMBER_OF|CLASSIFIED_IN]->(n)
-			RETURN a, type(r) AS relType, id(n) AS nodeId, n
-			ORDER BY type(r), n.name
-		`,
+MATCH (a:Artist)
+WHERE id(a) = {nodeId}
+OPTIONAL MATCH (a)-[r:HAS_SKILL|MEMBER_OF|CLASSIFIED_IN]-(n)
+RETURN a, type(r) AS relType, id(startNode(r)) AS startNodeId, id(n) AS nodeId, n
+ORDER BY type(r), n.name`,
 		Parameters: neoism.Props{"nodeId": id},
 		Result:     &results,
 	}
@@ -128,10 +130,15 @@ func (am *ArtistsManager) FindById(id int) (*Artist, error) {
 				skill.halify()
 				artist.Skills = append(artist.Skills, skill)
 			case res.RelType == "MEMBER_OF":
-				group := ArtistFromNode(&res.N)
-				group.Id = res.NodeId
-				group.halify()
-				artist.Groups = append(artist.Groups, group)
+				art := ArtistFromNode(&res.N)
+				art.Id = res.NodeId
+				art.halify()
+				if res.StartNodeId == id {
+					artist.Groups = append(artist.Groups, art)
+				}
+				if res.StartNodeId != id {
+					artist.Members = append(artist.Members, art)
+				}
 			case res.RelType == "CLASSIFIED_IN":
 				style := StyleFromNode(&res.N)
 				style.Id = res.NodeId
