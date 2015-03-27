@@ -3,7 +3,7 @@ var Router         = require('react-router');
 var Link           = Router.Link;
 var ArtistSkills   = require('./ArtistSkills.jsx');
 var ArtistStyles   = require('./ArtistStyles.jsx');
-var ArtistGroups   = require('./ArtistGroups.jsx');
+var ArtistArtists  = require('./ArtistArtists.jsx');
 var ArtistMasters  = require('./ArtistMasters.jsx');
 var SimilarArtists = require('./SimilarArtists.jsx');
 var Api            = require('./../stores/Api');
@@ -24,7 +24,12 @@ var Artist = React.createClass({
 
         var groupsNode = null;
         if (artist.groups.length > 0) {
-            groupsNode = <ArtistGroups groups={artist.groups}/>
+            groupsNode = <ArtistArtists artists={artist.groups} title="Member of groups"/>
+        }
+
+        var membersNode = null;
+        if (artist.members.length > 0) {
+            membersNode = <ArtistArtists artists={artist.members} title="Members"/>
         }
 
         var img = null;
@@ -56,6 +61,7 @@ var Artist = React.createClass({
                     </div>
                 </div>
                 <div className="container">
+                    {membersNode}
                     {groupsNode}
                     <ArtistMasters masters={masters}/>
                     <SimilarArtists artists={similars}/>

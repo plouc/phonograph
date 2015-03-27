@@ -38,7 +38,7 @@ var Label = React.createClass({
         }
 
         return (
-            <div>
+            <div className="container">
                 <div className="breadcrumbs">
                     <Link to="index">
                         <i className="fa fa-angle-left"/> labels

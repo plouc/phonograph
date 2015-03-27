@@ -17,7 +17,6 @@ var Skills       = require('./components/Skills.jsx');
 var Skill        = require('./components/Skill.jsx');
 var MenuToggle   = require('./components/MenuToggle.jsx');
 var Menu         = require('./components/Menu.jsx');
-var MenuActions  = require('./actions/MenuActions');
 var Promise      = require('bluebird');
 
 var App = React.createClass({

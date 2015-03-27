@@ -36,7 +36,7 @@ var Master = React.createClass({
         if (master.styles.length > 0) {
             var styleNodes = [];
             master.styles.map((style, i) => {
-                styleNodes.push(<span>{style.name}</span>);
+                styleNodes.push(<Link to="style" params={{ style_id: style.id }}>{style.name}</Link>);
                 if (i <  master.styles.length - 1) {
                     styleNodes.push(<span>,</span>);
                     styleNodes.push(<span>&nbsp;</span>);
